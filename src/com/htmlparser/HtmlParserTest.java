@@ -33,7 +33,7 @@ public static void main(String[] args) {
 				String adresse = cinemaElement.getElementsByClass("info").first().text();
 				
 				Cinema cinema = new Cinema(name, adresse);
-				System.out.println("Theather " + i + " : {name:" + name + "; adresse:" + adresse + "}");
+				//System.out.println("Theather " + i + " : {name:" + name + "; adresse:" + adresse + "}");
 				Elements moviesList = theater.getElementsByClass("movie");
 				
 				
@@ -42,12 +42,50 @@ public static void main(String[] args) {
 					String info = movie.getElementsByClass("info").first().text();
 					
 					String[] infoList = info.split(" - ");
-					String duree = infoList[0];
-					String rated = infoList[1];
+					String duree;
+					if(infoList.length>=1) {
+						duree = infoList[0];
+					} else {
+						duree = "N/C";
+					}
 					
-					Film film = new Film(nameMovie, duree, rated, cinema);
+					String rated;
+					if (infoList.length>=2) {
+						rated = infoList[1];
+					} else {
+						rated = "N/C";
+					}
 					
-					Element timeElement = movie.getElementsByClass("times").first();
+					if(nameMovie != null && !new String().equals(nameMovie)) {
+						Film film = new Film(nameMovie, duree, rated, cinema);
+						
+						Element allTimeAllLanguageElement = movie.getElementsByClass("times").first();
+						String timeTextHtml = allTimeAllLanguageElement.html();
+						String[] timeEachLanguageSplitted = timeTextHtml.split("<br>");
+						for(String timeEachLanguage : timeEachLanguageSplitted) {
+							Element allTimeElement = Jsoup.parse(timeEachLanguage).body();
+							String language = allTimeElement.ownText();
+							//System.out.println("Language : " + language);
+							
+							for(Element timeElement : allTimeElement.children()) {
+								String time = timeElement.ownText();
+								//System.out.println("OwnTextTimeElement : " + time);
+								String[] heuresEtMinutes = time.split(":");
+								int heures = Integer.valueOf(heuresEtMinutes[0]);
+								int minutes = Integer.valueOf(heuresEtMinutes[1]);
+								if(language==null || new String().equals(language) || VF.equals(language)) {
+									film.addSeanceVF(new Seance(film, heures, minutes, cinema));
+								} else {
+									film.addSeanceVOSTFR(new Seance(film, heures, minutes, cinema));
+								}
+							}			
+						}	
+						
+						cinema.addFilm(film);
+						//System.out.println(film);
+					}
+					
+					/*
 					System.out.println("Element times : " + timeElement);
 					for(Element element : timeElement.children()) {
 						System.out.println("Sous-element : " + element);
@@ -60,7 +98,7 @@ public static void main(String[] args) {
 					
 					//timeListStr = timeListStr.replace(" " + (char)160, " ");
 					String[] timeList = timeListStr.split(" " + (char)160);
-					System.out.println(timeListStr);
+					//System.out.println(timeListStr);
 					String language = "VF";
 					for(String time : timeList) {
 						if (VF.equals(time)) {
@@ -82,8 +120,9 @@ public static void main(String[] args) {
 						}
 					}
 					
-					cinema.addFilm(film);
-					System.out.println(film);
+					*/
+					
+
 					//System.out.println("{name:" + nameMovie + "; info:" + info + ";seances VF:" + seanceListVF + "; seances VOSTFR:" + seanceListVOSTFR + "}");
 				}
 				
