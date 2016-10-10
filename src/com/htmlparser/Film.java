@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class représentant un film
- * @author Kévin
+ * Class reprï¿½sentant un film
+ * @author Kï¿½vin
  *
  */
 public class Film {
@@ -27,7 +27,7 @@ public class Film {
 		this.duree = duree;
 		this.rated = rated;
 		this.seanceListVF = new ArrayList<Seance>();
-		this.seanceListVOSTFR = new ArrayList<>();
+		this.seanceListVOSTFR = new ArrayList<Seance>();
 	}
 	
 	public void addSeanceVF(Seance seance) {
