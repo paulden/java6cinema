@@ -50,6 +50,11 @@ public class Seance {
 	public void setCinema(Cinema cinema) {
 		this.cinema = cinema;
 	}
+
+	@Override
+	public String toString() {
+		return "Seance [date=" + date.getTime() + "]";
+	}
 	
 	
 	

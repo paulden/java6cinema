@@ -47,6 +47,12 @@ public static void main(String[] args) {
 					
 					Film film = new Film(nameMovie, duree, rated, cinema);
 					
+					Element timeElement = movie.getElementsByClass("times").first();
+					System.out.println("Element times : " + timeElement);
+					for(Element element : timeElement.children()) {
+						System.out.println("Sous-element : " + element);
+						System.out.println("Texte : " + element.text());
+					}
 					String timeListStr = movie.getElementsByClass("times").first().text();
 					
 					List<String> seanceListVOSTFR = new ArrayList<>();
