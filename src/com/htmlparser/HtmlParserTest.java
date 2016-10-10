@@ -17,7 +17,7 @@ public static void main(String[] args) {
 	
 	Document doc;
 	Element movieResults;
-	List<Cinema> cinemaList = new ArrayList<>();
+	List<Cinema> cinemaList = new ArrayList<Cinema>();
 	try {
 		int start = 0;
 		int i = 1;
@@ -55,8 +55,8 @@ public static void main(String[] args) {
 					}
 					String timeListStr = movie.getElementsByClass("times").first().text();
 					
-					List<String> seanceListVOSTFR = new ArrayList<>();
-					List<String> seanceListVF = new ArrayList<>();
+					List<String> seanceListVOSTFR = new ArrayList<String>();
+					List<String> seanceListVF = new ArrayList<String>();
 					
 					//timeListStr = timeListStr.replace(" " + (char)160, " ");
 					String[] timeList = timeListStr.split(" " + (char)160);

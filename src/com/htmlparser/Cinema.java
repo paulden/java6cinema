@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class représentant un cinéma
- * @author Kévin
+ * Class reprï¿½sentant un cinï¿½ma
+ * @author Kï¿½vin
  *
  */
 public class Cinema {
@@ -16,7 +16,7 @@ public class Cinema {
 	public Cinema(String nom, String adresse) {
 		this.nom = nom;
 		this.adresse = adresse;
-		filmList = new ArrayList<>();
+		filmList = new ArrayList<Film>();
 	}
 	
 	public Cinema(String nom, String adresse, List<Film> filmList) {
