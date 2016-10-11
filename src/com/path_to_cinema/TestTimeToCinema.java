@@ -10,7 +10,7 @@ import org.apache.http.client.ClientProtocolException;
  * @author Renaud
  *
  */
-public class TimeToCinema {
+public class TestTimeToCinema {
 	
 	public static double origin_lat = 48.7648573;
 	public static double origin_lng = 2.2885256;
