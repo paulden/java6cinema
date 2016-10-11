@@ -13,9 +13,9 @@ public class HtmlParserTest {
 	
 public static void main(String[] args) {
 	try {
-		System.out.println(GoogleMoviesHtmlParser.getAllCinemaWithSeancesNearAPlace("antony"));
-		System.out.println(GoogleMoviesHtmlParser.getCinemaWithSeances("la pléiade"));
-	} catch (IOException e) {
+		//System.out.println(GoogleMoviesHtmlParser.getAllCinemaWithSeancesNearAPlace("antony"));
+		System.out.println(GoogleMoviesHtmlParser.getCinemaWithSeances("rex"));
+	} catch (IOException | HtmlParserException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}

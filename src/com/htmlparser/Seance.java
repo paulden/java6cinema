@@ -2,7 +2,8 @@ package com.htmlparser;
 import java.util.Calendar;
 
 /**
- * Class représentant une séance de cinéma 
+ * Class représentant une séance de cinéma.<br>
+ * Contient le {@link Film} associé, la date à laquelle passe le film et le {@link Cinema} où se déroule la séance.
  * @author Kévin
  *
  */
@@ -18,6 +19,7 @@ public class Seance {
 		this.date = Calendar.getInstance();
 		this.date.set(Calendar.HOUR_OF_DAY, heure);
 		this.date.set(Calendar.MINUTE, minutes);
+		this.date.set(Calendar.SECOND, 0);
 	}
 	
 	public Seance(Film film, Calendar date, Cinema cinema) {

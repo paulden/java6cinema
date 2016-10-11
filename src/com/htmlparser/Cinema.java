@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class représentant un cinéma
+ * Class représentant un cinéma.
+ * La classe contient son nom, son adresse et la liste des films y passant.
  * @author Kévin
  *
  */
@@ -56,7 +57,7 @@ public class Cinema {
 
 	@Override
 	public String toString() {
-		return "Cinema [nom=" + nom + ", adresse=" + adresse + ", filmList=" + filmList + "]";
+		return "Cinema [nom=" + nom + ",adresse=" + adresse + ", filmList=" + filmList + "]";
 	}
 	
 	
