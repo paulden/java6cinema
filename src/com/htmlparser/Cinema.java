@@ -3,9 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class représentant un cinéma.
+ * Class reprï¿½sentant un cinï¿½ma.
  * La classe contient son nom, son adresse et la liste des films y passant.
- * @author Kévin
+ * @author Kï¿½vin
  *
  */
 public class Cinema {
@@ -17,7 +17,7 @@ public class Cinema {
 	public Cinema(String nom, String adresse) {
 		this.nom = nom;
 		this.adresse = adresse;
-		filmList = new ArrayList<>();
+		filmList = new ArrayList<Film>();
 	}
 	
 	public Cinema(String nom, String adresse, List<Film> filmList) {
