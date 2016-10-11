@@ -1,11 +1,11 @@
-package com.htmlparser;
+package com.cinema;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class repr�sentant un cin�ma.
+ * Class représentant un cinéma.
  * La classe contient son nom, son adresse et la liste des films y passant.
- * @author K�vin
+ * @author Kévin
  *
  */
 public class Cinema {
