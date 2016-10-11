@@ -1,10 +1,10 @@
-package com.htmlparser;
+package com.cinema;
 import java.util.Calendar;
 
 /**
- * Class représentant une séance de cinéma.<br>
- * Contient le {@link Film} associé, la date à laquelle passe le film et le {@link Cinema} où se déroule la séance.
- * @author Kévin
+ * Class reprÃ©sentant une sÃ©ance de cinÃ©ma.<br>
+ * Contient le {@link Film} associÃ©, la date Ã  laquelle passe le film et le {@link Cinema} oÃ¹ se dÃ©roule la sÃ©ance.
+ * @author KÃ©vin
  *
  */
 public class Seance {

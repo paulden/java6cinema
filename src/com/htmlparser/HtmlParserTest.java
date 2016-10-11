@@ -1,9 +1,9 @@
 package com.htmlparser;
-import java.io.IOException;
+import com.cinema.Cinema;
 
 /**
  * Class contenant un main pour tester le {@link GoogleMoviesHtmlParser}.
- * @author K�vin
+ * @author Kévin
  *
  */
 public class HtmlParserTest {
@@ -13,9 +13,11 @@ public class HtmlParserTest {
 	
 	public static void main(String[] args) {
 		try {
-			//System.out.println(GoogleMoviesHtmlParser.getAllCinemaWithSeancesNearAPlace("antony"));
-			System.out.println(GoogleMoviesHtmlParser.getCinemaWithSeances("rex"));
-		} catch (IOException | HtmlParserException e) {
+			for(Cinema cinema : GoogleMoviesHtmlParser.getAllCinemaWithSeancesNearAPlace("antony")) {
+				System.out.println(cinema);
+			}
+			System.out.println(GoogleMoviesHtmlParser.getCinemaWithSeances("grand rex"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

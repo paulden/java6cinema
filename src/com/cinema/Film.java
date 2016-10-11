@@ -1,11 +1,11 @@
-package com.htmlparser;
+package com.cinema;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class repr�sentant un film. <br>
- * Contient le nom du film, sa dur�e, son "rated", le {@link Cinema} dans lequel il passe, et la liste des {@link Seance} en fran�ais et en VOSTFR.
- * @author K�vin
+ * Contient le nom du film, sa durée, son "rated", le {@link Cinema} dans lequel il passe, et la liste des {@link Seance} en français et en VOSTFR.
+ * @author Kévin
  *
  */
 public class Film {
