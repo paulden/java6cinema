@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class repr�sentant un cin�ma
+ * Class repr�sentant un cin�ma.
+ * La classe contient son nom, son adresse et la liste des films y passant.
  * @author K�vin
  *
  */
@@ -56,7 +57,7 @@ public class Cinema {
 
 	@Override
 	public String toString() {
-		return "Cinema [nom=" + nom + ", adresse=" + adresse + ", filmList=" + filmList + "]";
+		return "Cinema [nom=" + nom + ",adresse=" + adresse + ", filmList=" + filmList + "]";
 	}
 	
 	

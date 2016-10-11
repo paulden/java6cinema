@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class repr�sentant un film
+ * Class repr�sentant un film. <br>
+ * Contient le nom du film, sa dur�e, son "rated", le {@link Cinema} dans lequel il passe, et la liste des {@link Seance} en fran�ais et en VOSTFR.
  * @author K�vin
  *
  */
