@@ -1,6 +1,13 @@
 package com.path_to_cinema;
 
+/**
+ * Exception class to handle the case when Google Maps API doesn't return any routes.
+ * @author Renaud
+ *
+ */
 public class NoPathException extends Exception {
+
+	private static final long serialVersionUID = 1L;
 
 	public NoPathException() {
 		// TODO Auto-generated constructor stub
