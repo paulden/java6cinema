@@ -1,8 +1,8 @@
-package com.htmlparser;
+package com.movie.exceptions;
 
 /**
- * Exception si le parser html n'a pas trouvé ce qu'il recherchait.
- * @author Kévin
+ * Exception si le parser html n'a pas trouvï¿½ ce qu'il recherchait.
+ * @author Kï¿½vin
  *
  */
 public class HtmlParserException extends Exception {

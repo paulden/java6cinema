@@ -1,4 +1,4 @@
-package com.googleplaces;
+package com.movie.exceptions;
 
 /**
  * Exception class to handle the case when Google Maps API doesn't find the address.

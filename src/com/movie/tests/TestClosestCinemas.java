@@ -1,6 +1,8 @@
-package com.googleplaces;
+package com.movie.tests;
 
 import java.io.IOException;
+
+import com.movie.locations.ClosestCinemas;
 import org.json.JSONException;
 
 public class TestClosestCinemas {

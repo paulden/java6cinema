@@ -1,4 +1,4 @@
-package com.googleplaces;
+package com.movie.locations;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.cinema.Cinema;
+import com.movie.cinema.Cinema;
 
 /* Cette classe permet d'obtenir les cinémas les plus proches sous forme
 d'une collection List d'objets Cinema(nom, adresse, lat, lng) pouvant être
