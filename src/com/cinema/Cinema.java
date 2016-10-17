@@ -23,11 +23,14 @@ public class Cinema {
 	 * L'adresse du cinéma.
 	 */
 	private String adresse;
-	
+
 	/**
 	 * La liste des films passant dans ce cinéma.
 	 */
 	private List<Film> filmList;
+	
+	private double lat;
+	private double lng;
 	
 	/**
 	 * Une map associant à un mode de trajet, un temps de trajet en seconde.
@@ -39,6 +42,13 @@ public class Cinema {
 		this.adresse = adresse;
 		filmList = new ArrayList<Film>();
 		tempsTrajetMap = new HashMap<>();
+	}
+	
+	public Cinema(String nom, String adresse, double lat, double lng) {
+		this.nom = nom;
+		this.adresse = adresse;
+		this.lat = lat;
+		this.lng = lng;
 	}
 	
 	public Cinema(String nom, String adresse, List<Film> filmList) {
@@ -58,6 +68,22 @@ public class Cinema {
 
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+	
+	public double getLat(){
+		return lat;
+	}
+	
+	public void setLat(){
+		this.lat = lat;
+	}
+	
+	public double getLng(){
+		return lng;
+	}
+	
+	public void setLng(){
+		this.lng = lng;
 	}
 
 	public String getAdresse() {
