@@ -21,7 +21,7 @@ import com.movie.cinema.Seance;
  * @author Kévin
  *
  */
-public class GoogleMoviesHtmlParser {
+public final class GoogleMoviesHtmlParser {
 	
 	/**
 	 * Static String déterminant dans le html si un film est en français
@@ -32,6 +32,14 @@ public class GoogleMoviesHtmlParser {
 	 * Static String déterminant dans le html si un film est sous titré en français
 	 */
 	private static String VOSTFR = "Subtitled in French";
+	
+	/**
+	 * Private constructeur.
+	 */
+	private GoogleMoviesHtmlParser() {
+		
+	}
+	
 	
 	/**
 	 * Fonction static permettant d'obtenir tous les cinémas et leurs séances à proximité d'un endroit donnée.
@@ -50,7 +58,7 @@ public class GoogleMoviesHtmlParser {
 			do {
 				
 				//Récupère le code html provenant de google/movies
-				doc = Jsoup.connect("https://www.google.com/movies?near=" + place + "&start="+start).get();
+				doc = Jsoup.connect("https://www.google.com/movies?hl=fr&near=" + place + "&start="+start).get();
 				movieResults = doc.getElementById("movie_results");
 				
 				//Si l'html possède une balise movie_results, alors il a possiblement trouvé des cinémas.
@@ -89,7 +97,7 @@ public class GoogleMoviesHtmlParser {
 		String query = cinemaName.replace(" ", "+");
 		
 		//On récupère le code html à partir du site google/movies
-		doc = Jsoup.connect("https://www.google.com/movies?q=" + query).get();
+		doc = Jsoup.connect("https://www.google.com/movies?hl=fr&q=" + query).get();
 		movieResults = doc.getElementById("movie_results");
 		
 		//Si le document possède la balise "movies_results", alors il a possiblement trouvé des cinéma.
@@ -111,6 +119,83 @@ public class GoogleMoviesHtmlParser {
 		} else { //Sinon il n'a trouvé aucun cinéma et on envoit une exception.
 			throw new HtmlParserException("Aucun cinéma n'a été trouvé sous le nom " + cinemaName);
 		}
+	}
+	
+	/**
+	 * Permet de renvoyer une liste de {@link Cinema} correspondant à un nom, et contenant toutes les {@link Seance} des différents {@link Film} passant dans ce cinéma.
+	 * @param name Le nom du cinéma
+	 * @return Une liste de cinéma correspondant au nom, avec toutes les infos des films et leurs séances. Peut renvoyer une liste vide.
+	 * @throws IOException lors d'une erreur pour accéder à la page google/movies
+	 */
+	public static List<Cinema> getAllCinemaWithSeances(String cinemaName) throws IOException {
+		Document doc;
+		Element movieResults;
+		
+		//On créé la query à partir du nom du cinéma
+		String query = cinemaName.replace(" ", "+");
+		
+		//On crée la liste des cinémas
+		List<Cinema> cinemaList = new ArrayList<>();
+		
+		//On récupère le code html à partir du site google/movies
+		doc = Jsoup.connect("https://www.google.com/movies?hl=fr&q=" + query).get();
+		movieResults = doc.getElementById("movie_results");
+		
+		//Si le document possède la balise "movies_results", alors il a possiblement trouvé des cinéma.
+		if(movieResults!=null) {
+			//On obtient une liste de cinéma. La liste peut être vide, si aucun cinéma n'est trouvé.
+			Elements allTheaters = movieResults.getElementsByClass("theater");
+			
+			//Pour chaque Element de la liste, on créé un objet Cinema contenant les infos et on l'ajoute à la liste.
+			for(Element theater : allTheaters) {
+				Cinema cinema = GoogleMoviesHtmlParser.getCinemaFromHtmlTheaterElement(theater);
+				cinemaList.add(cinema);
+			}
+			
+			return cinemaList;
+		} else { //Sinon on renvoie la liste vide
+			return cinemaList;
+		}
+	}
+	
+	/**
+	 * Permet de mettre à jour un objet {@link Cinema} contenant toutes les {@link Seance} des différents {@link Film} passant dans ce cinéma.
+	 * @param cinema Le cinema contenant le nom du cinéma
+	 * @throws IOException lors d'une erreur pour accéder à la page google/movies
+	 * @throws HtmlParserException si aucun cinéma correspondant n'a été trouvé
+	 */
+	public static void updateCinemaWithSeances(Cinema cinema) throws IOException, HtmlParserException{
+		String cinemaName = cinema.getNom();
+		String cinemaAdresse = cinema.getAdresse();
+		List<Cinema> cinemaList = GoogleMoviesHtmlParser.getAllCinemaWithSeances(cinemaName);
+		
+		Cinema bestCinema = null;
+		double bestCorrespondanceAdresse = 0;
+		//Pour chaque cinéma, on compare les adresses et on renvoit le cinéma qui correspond au mieux à l'adresse
+		for (Cinema cinemaTrouve : cinemaList) {
+			String adresseTrouve = cinemaTrouve.getAdresse();
+			cinemaAdresse = cinemaAdresse.replace(",", "");
+			cinemaAdresse = adresseTrouve.replace("-", " ");
+			String[] adresseSplited = cinemaAdresse.split(" ");
+			double correspondance = 0;
+			for (String word : adresseSplited) {
+				if (adresseTrouve.contains(word)) {
+					correspondance++;
+				}
+			}
+			correspondance/=adresseSplited.length;
+			if (correspondance>bestCorrespondanceAdresse) {
+				bestCorrespondanceAdresse = correspondance;
+				bestCinema = cinemaTrouve;
+			}
+		}
+		
+		if(bestCinema != null) {
+			cinema.setFilmList(bestCinema.getFilmList());
+		} else {
+			throw new HtmlParserException("Aucun cinéma n'a été trouvé correspondant au nom " + cinemaName + " et à l'adresse " + cinemaAdresse);
+		}
+		
 	}
 	
 	/**
