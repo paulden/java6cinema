@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -41,13 +40,9 @@ public class ClosestCinemas {
 		this.closestCinemas = closestCinemas;
 	}
 	
+
 	//Cette méthode permet de construire la liste des cinémas proches en appelant l'API Google Places
-	public void setClosestCinemas(double radius) throws ClientProtocolException, IOException, JSONException{
-		
-		//On récupère l'adresse de l'utilisateur via la classe MyAddress
-		myAddress.setMyIP();
-		myAddress.setMyLat();
-		myAddress.setMyLng();
+	public void setClosestCinemas(double radius) throws IOException, JSONException{
 		
 		lat = myAddress.getMyLat();
 		lng = myAddress.getMyLng();
