@@ -32,9 +32,6 @@ public class ClosestCinemas {
 	}
 	
 	public void setClosestCinemas(double radius) throws ClientProtocolException, IOException, JSONException{
-		myAddress.setMyIP();
-		myAddress.setMyLat();
-		myAddress.setMyLng();
 		
 		lat = myAddress.getMyLat();
 		lng = myAddress.getMyLng();

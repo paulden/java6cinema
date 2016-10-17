@@ -2,7 +2,6 @@ package com.googleplaces;
 
 import java.io.IOException; 
 import org.apache.http.*;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -19,8 +18,8 @@ public class Main {
 	public static double radius = 5000;
 	public static ClosestCinemas closestCinemas = new ClosestCinemas();
 
-	public static void main(String[] args) throws ClientProtocolException, IOException, JSONException {
-		
+	public static void main(String[] args) throws IOException, JSONException {
+
 		closestCinemas.setClosestCinemas(10000);
 		
 		int n = closestCinemas.getClosestCinemas().size();
@@ -31,6 +30,11 @@ public class Main {
 			System.out.println(closestCinemas.getClosestCinemas().get(i).getLat());
 			System.out.println(closestCinemas.getClosestCinemas().get(i).getLng());
 		}
+
+
+		String goodAddress = new MyAddress("Grande Voie des Vignes 92295 CHÂTENAY-MALABRY Cedex").toString();
+		System.out.println(goodAddress);
+
 
 	}
 
