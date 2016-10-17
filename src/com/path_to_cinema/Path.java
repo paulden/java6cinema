@@ -28,6 +28,28 @@ public class Path {
 	protected int value;
 	protected String readable;
 	
+	public enum ModeTrajet {
+		WALKING("walking"),
+		DRIVING("driving"),
+		BICYCLING("bicycling"),
+		TRANSIT("transit");
+	
+		private String mode;
+		
+		ModeTrajet(String mode) {
+			this.mode = mode;
+		}
+		
+		/**
+		 * Permet de récupérer le mode du trajet.
+		 */
+		@Override
+		public String toString() {
+			return this.mode;
+		}
+	
+	};
+	
 	public Path(double origin_lat, double origin_lng, double dest_lat, double dest_lng, String mode) 
 			throws ClientProtocolException, IOException, NoPathException {
 		super();

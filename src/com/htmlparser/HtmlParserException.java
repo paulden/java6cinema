@@ -1,8 +1,8 @@
 package com.htmlparser;
 
 /**
- * Exception si le parser html n'a pas trouvé ce qu'il recherchait.
- * @author Kévin
+ * Exception si le parser html n'a pas trouvÃ© ce qu'il recherchait.
+ * @author KÃ©vin
  *
  */
 public class HtmlParserException extends Exception {
