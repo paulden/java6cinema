@@ -1,7 +1,9 @@
-package com.path_to_cinema;
+package com.movie.tests;
 
 import java.io.IOException;
 
+import com.movie.exceptions.NoPathException;
+import com.movie.locations.Path;
 import org.apache.http.client.ClientProtocolException;
 
 /**

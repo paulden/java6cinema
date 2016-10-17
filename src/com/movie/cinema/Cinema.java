@@ -1,4 +1,4 @@
-package com.cinema;
+package com.movie.cinema;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

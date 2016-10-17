@@ -1,12 +1,13 @@
-package com.htmlparser;
-import com.cinema.Cinema;
+package com.movie.tests;
+import com.movie.cinema.Cinema;
+import com.movie.htmlparser.GoogleMoviesHtmlParser;
 
 /**
  * Class contenant un main pour tester le {@link GoogleMoviesHtmlParser}.
  * @author Kévin
  *
  */
-public class HtmlParserTest {
+public class TestHtmlParser {
 	
 	public static String VF = "Dubbed in French";
 	public static String VOSTFR = "Subtitled in French";

@@ -1,7 +1,8 @@
-package com.googleplaces;
+package com.movie.locations;
 
 import java.io.IOException;
 
+import com.movie.exceptions.AddressNotFoundException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
