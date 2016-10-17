@@ -1,4 +1,4 @@
-package com.path_to_cinema;
+package com.paths;
 
 /**
  * Exception class to handle the case when Google Maps API doesn't return any routes.

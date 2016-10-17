@@ -1,4 +1,4 @@
-package com.path_to_cinema;
+package com.paths;
 
 import java.io.IOException;
 

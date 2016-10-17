@@ -3,7 +3,7 @@ package com.googleplaces;
 import java.io.IOException;
 import org.json.JSONException;
 
-public class Main {
+public class TestClosestCinemas {
 	
 	private static String API_key = "AIzaSyAAgLaPXaGmpAC_oaJqjoFZt8A2aQfftTw";
 	public static double lat = 48.7648573;
@@ -23,12 +23,6 @@ public class Main {
 			System.out.println(closestCinemas.getClosestCinemas().get(i).getLat());
 			System.out.println(closestCinemas.getClosestCinemas().get(i).getLng());
 		}
-
-
-		String goodAddress = new MyAddress("Grande Voie des Vignes 92295 CHÂTENAY-MALABRY Cedex").toString();
-		System.out.println(goodAddress);
-
-
 	}
 
 }
