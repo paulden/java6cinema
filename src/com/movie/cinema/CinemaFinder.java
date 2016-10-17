@@ -1,19 +1,20 @@
-package com.cinema;
+package com.movie.cinema;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.movie.exceptions.HtmlParserException;
+import com.movie.exceptions.NoPathException;
+import com.movie.htmlparser.GoogleMoviesHtmlParser;
+import com.movie.locations.ClosestCinemas;
+import com.movie.locations.MyAddress;
+import com.movie.locations.Path;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
-import com.googleplaces.ClosestCinemas;
-import com.googleplaces.MyAddress;
-import com.htmlparser.GoogleMoviesHtmlParser;
-import com.htmlparser.HtmlParserException;
-import com.path_to_cinema.NoPathException;
-import com.path_to_cinema.Path;
+
 
 /**
  * Class récupérant les cinémas les plus proches, puis récupérant les horaires de ces cinémas, pour<br>
@@ -78,9 +79,6 @@ public class CinemaFinder {
 				Map<Path.ModeTrajet, Integer> cinemaMap = cinema.getTempsTrajetMap();
 				try {
 					MyAddress myAdress = new MyAddress();
-					myAdress.setMyIP();
-					myAdress.setMyLat();
-					myAdress.setMyLng();
 					double originLat = myAdress.getMyLat();
 					double originLng = myAdress.getMyLng();
 					

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.path_to_cinema.Path;
+import com.movie.locations.Path;
 
 /**
  * Class représentant un cinéma.
