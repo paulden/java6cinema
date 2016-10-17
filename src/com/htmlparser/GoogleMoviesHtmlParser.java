@@ -20,7 +20,7 @@ import com.cinema.Seance;
  * @author Kévin
  *
  */
-public class GoogleMoviesHtmlParser {
+public final class GoogleMoviesHtmlParser {
 	
 	/**
 	 * Static String déterminant dans le html si un film est en français
@@ -31,6 +31,14 @@ public class GoogleMoviesHtmlParser {
 	 * Static String déterminant dans le html si un film est sous titré en français
 	 */
 	private static String VOSTFR = "Subtitled in French";
+	
+	/**
+	 * Private constructeur.
+	 */
+	private GoogleMoviesHtmlParser() {
+		
+	}
+	
 	
 	/**
 	 * Fonction static permettant d'obtenir tous les cinémas et leurs séances à proximité d'un endroit donnée.
@@ -110,6 +118,18 @@ public class GoogleMoviesHtmlParser {
 		} else { //Sinon il n'a trouvé aucun cinéma et on envoit une exception.
 			throw new HtmlParserException("Aucun cinéma n'a été trouvé sous le nom " + cinemaName);
 		}
+	}
+	
+	/**
+	 * Permet de mettre à jour un objet {@link Cinema} contenant toutes les {@link Seance} des différents {@link Film} passant dans ce cinéma.
+	 * @param cinema Le cinema contenant le nom du cinéma
+	 * @throws IOException lors d'une erreur pour accéder à la page google/movies
+	 * @throws HtmlParserException Si le parser a trouvé aucun ou plusieurs cinéma avec le nom donné
+	 */
+	public static void updateCinemaWithSeances(Cinema cinema) throws IOException, HtmlParserException {
+		String cinemaName = cinema.getNom();
+		Cinema newCinema = GoogleMoviesHtmlParser.getCinemaWithSeances(cinemaName);
+		cinema.setFilmList(newCinema.getFilmList());
 	}
 	
 	/**

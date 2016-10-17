@@ -1,6 +1,10 @@
 package com.cinema;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.path_to_cinema.Path;
 
 /**
  * Class représentant un cinéma.
@@ -10,14 +14,31 @@ import java.util.List;
  */
 public class Cinema {
 	
+	/**
+	 * Le nom du cinéma.
+	 */
 	private String nom;
+	
+	/**
+	 * L'adresse du cinéma.
+	 */
 	private String adresse;
+	
+	/**
+	 * La liste des films passant dans ce cinéma.
+	 */
 	private List<Film> filmList;
+	
+	/**
+	 * Une map associant à un mode de trajet, un temps de trajet en seconde.
+	 */
+	private Map<Path.ModeTrajet, Integer> tempsTrajetMap;
 	
 	public Cinema(String nom, String adresse) {
 		this.nom = nom;
 		this.adresse = adresse;
 		filmList = new ArrayList<Film>();
+		tempsTrajetMap = new HashMap<>();
 	}
 	
 	public Cinema(String nom, String adresse, List<Film> filmList) {
@@ -53,6 +74,14 @@ public class Cinema {
 
 	public void setFilmList(List<Film> filmList) {
 		this.filmList = filmList;
+	}	
+
+	public Map<Path.ModeTrajet, Integer> getTempsTrajetMap() {
+		return tempsTrajetMap;
+	}
+
+	public void setTempsTrajetMap(Map<Path.ModeTrajet, Integer> tempsTrajetMap) {
+		this.tempsTrajetMap = tempsTrajetMap;
 	}
 
 	@Override
