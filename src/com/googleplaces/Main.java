@@ -1,14 +1,7 @@
 package com.googleplaces;
 
-import java.io.IOException; 
-import org.apache.http.*;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONArray;
+import java.io.IOException;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Main {
 	

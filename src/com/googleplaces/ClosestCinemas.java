@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -31,7 +30,7 @@ public class ClosestCinemas {
 		this.closestCinemas = closestCinemas;
 	}
 	
-	public void setClosestCinemas(double radius) throws ClientProtocolException, IOException, JSONException{
+	public void setClosestCinemas(double radius) throws IOException, JSONException{
 		
 		lat = myAddress.getMyLat();
 		lng = myAddress.getMyLng();

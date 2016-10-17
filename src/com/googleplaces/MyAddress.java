@@ -12,6 +12,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+/**
+ * This class creates an object containing the user's location. Its multiple constructors allow the user to specify what he wants : <br>
+ *     - either he doesn't give any information and his location is retrieved via his IP address (which is retrieved using an API) <br>
+ *     - or he provides an address and we deduce his coordinates from it <br>
+ *     - he can also directly give his IP address and GPS coordinates.
+ * @author Paul & Renaud
+ */
+
 public class MyAddress {
 	
 	private String myIP;
@@ -20,7 +28,9 @@ public class MyAddress {
 
 	private static String MY_API_KEY = "AIzaSyCm77ySoeF1Kzu7BaxaW7wlUfx0heV9mj4";
 
-	// First constructor without any arguments : generates the GPS coordinates from the user's IP address.
+	/**
+	 * First constructor without any arguments : generates the GPS coordinates from the user's IP address.
+	 */
 	public MyAddress(){
 		try {
 			HttpClient httpClient = HttpClientBuilder.create().build();
@@ -38,7 +48,10 @@ public class MyAddress {
 		}
 	}
 
-	// The second constructor sets the GPS coordinates using the user's location as input.
+	/**
+	 * The second constructor sets the GPS coordinates using the user's location as input.
+	 * @param address : the user's address as used by the post services.
+	 */
 	public MyAddress(String address) {
 		try {
 			HttpClient httpClient = HttpClientBuilder.create().build();
@@ -48,14 +61,21 @@ public class MyAddress {
 		}
 	}
 
-	// Basic constructor using the 3 arguments defining the class.
+	/**
+	 * Basic constructor using the 3 arguments defining the class.
+	 * @param myIP : user's IP address
+	 * @param lat : user's latitude
+	 * @param lng : user's longitude
+	 */
 	public MyAddress(String myIP, double lat, double lng){
 		this.myIP = myIP;
 		this.myLat = lat;
 		this.myLng = lng;
 	}
 
-	// Uses an API to get the user's IP
+	/**
+	 * Uses an API to get the user's IP
+ 	 */
 	public void setMyIP(HttpClient httpClient) throws IOException, JSONException{
 		String requete = "https://api.ipify.org/?format=json";
 		HttpGet getRequest = new HttpGet(requete);
@@ -70,7 +90,9 @@ public class MyAddress {
 		return myIP;
 	}
 
-	// SetMyLat and SetMyLng get the user's location from his IP address
+	/**
+	 * SetMyLat and SetMyLng get the user's location from his IP address
+ 	 */
 	public void setMyLat()throws IOException, JSONException{
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		String requete = "http://ip-api.com/json/"+getMyIP();
@@ -94,6 +116,13 @@ public class MyAddress {
 		this.myLng = obj.getDouble("lon");
 	}
 
+	/**
+	 * Sets the user's GPS coordinates from a postal address
+	 * @param address : the user's postal address in String form.
+	 * @param httpClient : the client used to connect to the API.
+	 * @throws IOException if the httpClient can't execute the request
+	 * @throws AddressNotFoundException if the address given by the user doesn't match with anything in google maps database
+	 */
 	public void setCoordinates(String address, HttpClient httpClient) throws IOException, AddressNotFoundException {
 		// the request to google maps api
 		String requete = generateLocationRequest(address);
@@ -116,6 +145,7 @@ public class MyAddress {
 
 	}
 
+	// Generate the request string from the address in postal form.
 	private String generateLocationRequest(String address) {
 		String request = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 		request += address.replace(" ", "+");
