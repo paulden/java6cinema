@@ -31,7 +31,7 @@ public class Path {
 	public enum ModeTrajet {
 		WALKING("walking"),
 		DRIVING("driving"),
-		BICYCLING("bicylcing"),
+		BICYCLING("bicycling"),
 		TRANSIT("transit");
 	
 		private String mode;

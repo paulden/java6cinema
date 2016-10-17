@@ -49,6 +49,7 @@ public class Cinema {
 		this.adresse = adresse;
 		this.lat = lat;
 		this.lng = lng;
+		tempsTrajetMap = new HashMap<>();
 	}
 	
 	public Cinema(String nom, String adresse, List<Film> filmList) {
@@ -56,6 +57,8 @@ public class Cinema {
 		this.nom = nom;
 		this.adresse = adresse;
 		this.filmList = filmList;
+		this.lat = -1;
+		this.lng = -1;
 	}
 	
 	public void addFilm(Film film) {
@@ -70,19 +73,27 @@ public class Cinema {
 		this.nom = nom;
 	}
 	
+	/**
+	 * Getter de la latitude.
+	 * @return La latitude : vaut -1 si la latitude n'est pas set.
+	 */
 	public double getLat(){
 		return lat;
 	}
 	
-	public void setLat(){
+	public void setLat(double lat){
 		this.lat = lat;
 	}
 	
+	/**
+	 * Getter de la longitude. 
+	 * @return La longitude. Vaut -1 si la longitude n'est pas set.
+	 */
 	public double getLng(){
 		return lng;
 	}
 	
-	public void setLng(){
+	public void setLng(double lng){
 		this.lng = lng;
 	}
 
@@ -112,7 +123,7 @@ public class Cinema {
 
 	@Override
 	public String toString() {
-		return "Cinema [nom=" + nom + ",adresse=" + adresse + ", filmList=" + filmList + "]";
+		return "Cinema [nom=" + nom + ",adresse=" + adresse + ", lat=" + lat + ", lng=" + lng + ", tempsTrajetMap=" + tempsTrajetMap + ", filmList=" + filmList + "]";
 	}
 	
 	
