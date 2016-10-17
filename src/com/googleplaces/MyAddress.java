@@ -36,11 +36,7 @@ public class MyAddress {
 			HttpClient httpClient = HttpClientBuilder.create().build();
 			setMyIP(httpClient);
 			String requete = "http://ip-api.com/json/"+getMyIP();
-			HttpGet getRequest = new HttpGet(requete);
-			getRequest.addHeader("accept", "application/json");
-			HttpResponse res = httpClient.execute(getRequest);
-			String responseString = new BasicResponseHandler().handleResponse(res);
-			JSONObject obj = new JSONObject(responseString);
+			JSONObject obj = getJsonResponse(requete, httpClient);
 			this.myLat = obj.getDouble("lat");
 			this.myLng = obj.getDouble("lon");
 		} catch (IOException | JSONException e) {
@@ -78,11 +74,7 @@ public class MyAddress {
  	 */
 	public void setMyIP(HttpClient httpClient) throws IOException, JSONException{
 		String requete = "https://api.ipify.org/?format=json";
-		HttpGet getRequest = new HttpGet(requete);
-		getRequest.addHeader("accept", "application/json");
-		HttpResponse res = httpClient.execute(getRequest);
-		String responseString = new BasicResponseHandler().handleResponse(res);	
-		JSONObject obj = new JSONObject(responseString);
+		JSONObject obj = getJsonResponse(requete, httpClient);
 		this.myIP = obj.getString("ip");
 	}
 	
@@ -96,11 +88,7 @@ public class MyAddress {
 	public void setMyLat()throws IOException, JSONException{
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		String requete = "http://ip-api.com/json/"+getMyIP();
-		HttpGet getRequest = new HttpGet(requete);
-		getRequest.addHeader("accept", "application/json");
-		HttpResponse res = httpClient.execute(getRequest);
-		String responseString = new BasicResponseHandler().handleResponse(res);	
-		JSONObject obj = new JSONObject(responseString);
+		JSONObject obj = getJsonResponse(requete, httpClient);
 		this.myLat = obj.getDouble("lat");
 	}
 
@@ -108,11 +96,7 @@ public class MyAddress {
 	public void setMyLng()throws IOException, JSONException{
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		String requete = "http://ip-api.com/json/"+getMyIP();
-		HttpGet getRequest = new HttpGet(requete);
-		getRequest.addHeader("accept", "application/json");
-		HttpResponse res = httpClient.execute(getRequest);
-		String responseString = new BasicResponseHandler().handleResponse(res);	
-		JSONObject obj = new JSONObject(responseString);
+		JSONObject obj = getJsonResponse(requete, httpClient);
 		this.myLng = obj.getDouble("lon");
 	}
 
@@ -126,13 +110,7 @@ public class MyAddress {
 	public void setCoordinates(String address, HttpClient httpClient) throws IOException, AddressNotFoundException {
 		// the request to google maps api
 		String requete = generateLocationRequest(address);
-
-		// handling the request
-		HttpGet getRequest = new HttpGet(requete);
-		getRequest.addHeader("accept", "application/json");
-		HttpResponse res = httpClient.execute(getRequest);
-		String responseString = new BasicResponseHandler().handleResponse(res);
-		JSONObject obj = new JSONObject(responseString);
+		JSONObject obj = getJsonResponse(requete, httpClient);
 
 		// Looking for the right field in Json object
 		JSONArray results = obj.getJSONArray("results");
@@ -151,6 +129,15 @@ public class MyAddress {
 		request += address.replace(" ", "+");
 		request += "&key=" + MY_API_KEY;
 		return request;
+	}
+
+	// Separate the client "business" for clarity purposes
+	public JSONObject getJsonResponse(String request, HttpClient httpClient) throws IOException{
+		HttpGet getRequest = new HttpGet(request);
+		getRequest.addHeader("accept", "application/json");
+		HttpResponse res = httpClient.execute(getRequest);
+		String responseString = new BasicResponseHandler().handleResponse(res);
+		return new JSONObject(responseString);
 	}
 	
 	public double getMyLat(){
