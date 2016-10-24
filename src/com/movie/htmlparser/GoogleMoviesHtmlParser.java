@@ -157,7 +157,7 @@ public final class GoogleMoviesHtmlParser {
 			return cinemaList;
 		}
 	}
-	
+
 	/**
 	 * Permet de mettre à jour un objet {@link Cinema} contenant toutes les {@link Seance} des différents {@link Film} passant dans ce cinéma.
 	 * @param cinema Le cinema contenant le nom du cinéma
@@ -191,11 +191,7 @@ public final class GoogleMoviesHtmlParser {
 		}
 		
 		if(bestCinema != null) {
-			bestCinema.setAdresse(cinemaAdresse);
-			bestCinema.setLat(cinema.getLat());
-			bestCinema.setLng(cinema.getLng());
-			cinema = bestCinema;
-			//cinema.setFilmList(bestCinema.getFilmList());
+			cinema.setFilmList(bestCinema.getFilmList());
 		} else {
 			throw new HtmlParserException("Aucun cinéma n'a été trouvé correspondant au nom " + cinemaName + " et à l'adresse " + cinemaAdresse);
 		}
