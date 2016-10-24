@@ -84,7 +84,7 @@ public final class GoogleMoviesHtmlParser {
 	
 	/**
 	 * Permet de renvoyer un objet {@link Cinema} contenant toutes les {@link Seance} des différents {@link Film} passant dans ce cinéma.
-	 * @param name Le nom du cinéma
+	 * @param cinemaName Le nom du cinéma
 	 * @return Le cinéma avec toutes les infos des films et leurs séances.
 	 * @throws IOException lors d'une erreur pour accéder à la page google/movies
 	 * @throws HtmlParserException Si le parser a trouvé aucun ou plusieurs cinéma avec le nom donné
@@ -123,7 +123,7 @@ public final class GoogleMoviesHtmlParser {
 	
 	/**
 	 * Permet de renvoyer une liste de {@link Cinema} correspondant à un nom, et contenant toutes les {@link Seance} des différents {@link Film} passant dans ce cinéma.
-	 * @param name Le nom du cinéma
+	 * @param cinemaName Le nom du cinéma
 	 * @return Une liste de cinéma correspondant au nom, avec toutes les infos des films et leurs séances. Peut renvoyer une liste vide.
 	 * @throws IOException lors d'une erreur pour accéder à la page google/movies
 	 */
