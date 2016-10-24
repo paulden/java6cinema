@@ -103,11 +103,15 @@ public class CinemaFinder {
 		
 		for(Cinema cinema : cinemaList) {
 			List<Film> filmCinemaList = cinema.getFilmList();
-			for(Film film : filmCinemaList) {
-				List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
-				List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
-				addBestSeancesFrom(seanceVFFilmCinemaList, null, null);
-				addBestSeancesFrom(seanceVOSTFRFilmCinemaList, null, null);
+			try {
+				for (Film film : filmCinemaList) {
+					List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
+					List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
+					addBestSeancesFrom(seanceVFFilmCinemaList, null, null);
+					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, null, null);
+				}
+			} catch (NullPointerException e) {
+				System.out.println("No movie found for the cinema " + cinema.getNom());
 			}
 		}		
 		
@@ -117,16 +121,20 @@ public class CinemaFinder {
 	public Map<Film, List<Seance>> findBestSeancesForEachFilm() {
 		findBestSeances();
 		Map<Film, List<Seance>> filmSeanceListMap = new HashMap<>();
-		for(Seance seance : bestSeanceList) {
-			Film film = seance.getFilm();
-			if (filmSeanceListMap.containsKey(film)) {
-				List<Seance> seanceList = filmSeanceListMap.get(film);
-				seanceList.add(seance);
-			} else {
-				List<Seance> seanceList = new ArrayList<>();
-				seanceList.add(seance);
-				filmSeanceListMap.put(film, seanceList);
+		try {
+			for (Seance seance : bestSeanceList) {
+				Film film = seance.getFilm();
+				if (filmSeanceListMap.containsKey(film)) {
+					List<Seance> seanceList = filmSeanceListMap.get(film);
+					seanceList.add(seance);
+				} else {
+					List<Seance> seanceList = new ArrayList<>();
+					seanceList.add(seance);
+					filmSeanceListMap.put(film, seanceList);
+				}
 			}
+		} catch (NullPointerException e) {
+			System.out.println("No movie found.");
 		}
 		return filmSeanceListMap;
 	}

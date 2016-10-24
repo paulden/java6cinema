@@ -24,12 +24,12 @@ public class TestCinemaFinder {
 			cinemaFinder.updateTempsTrajet();
 			cinemaFinder.printCinemaList();
 
-			/*
+
 			List<Seance> bestSeanceList = cinemaFinder.findBestSeances();
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
-			
+
 			Map<Film, List<Seance>> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm();
 			for(Film film : filmSeanceListMap.keySet()) {
 				List<Seance> seanceList = filmSeanceListMap.get(film);
@@ -41,8 +41,7 @@ public class TestCinemaFinder {
 				sb.deleteCharAt(sb.length()-1).append("]");
 				System.out.println(sb.toString());
 			}
-			*/
-			
+
 		} catch (JSONException | IOException e) {
 			e.printStackTrace();
 		}
