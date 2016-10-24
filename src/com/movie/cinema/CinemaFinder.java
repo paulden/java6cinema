@@ -1,14 +1,7 @@
 package com.movie.cinema;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.movie.exceptions.HtmlParserException;
 import com.movie.exceptions.NoPathException;
@@ -52,15 +45,13 @@ public class CinemaFinder {
 	/**
 	 * Permet de set la liste des cinémas avec la liste des cinémas les plus proches.
 	 * @param radius Le rayon de la recherche en mètres
-	 * @throws IOException 
-	 * @throws JSONException 
-	 * @throws ClientProtocolException 
+	 * @throws IOException in case of API connection problem
+	 * @throws JSONException in case of unexpected JSON object recieved
 	 */
-	public void findClosestCinemas(double radius) throws ClientProtocolException, JSONException, IOException {
+	public void findClosestCinemas(double radius) throws JSONException, IOException {
 		ClosestCinemas closestCinemas = new ClosestCinemas();
 		closestCinemas.setClosestCinemas(radius);
-		List<Cinema> closestCinemaList = closestCinemas.getClosestCinemas();
-		this.cinemaList = closestCinemaList;
+		this.cinemaList = closestCinemas.getClosestCinemas();
 	}
 	
 	/**
@@ -115,8 +106,8 @@ public class CinemaFinder {
 			for(Film film : filmCinemaList) {
 				List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
 				List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
-				addBestSeancesFrom(seanceVFFilmCinemaList, nombreSeance, null, null);
-				addBestSeancesFrom(seanceVOSTFRFilmCinemaList, nombreSeance, null, null);
+				addBestSeancesFrom(seanceVFFilmCinemaList, null, null);
+				addBestSeancesFrom(seanceVOSTFRFilmCinemaList, null, null);
 			}
 		}		
 		
@@ -140,16 +131,14 @@ public class CinemaFinder {
 		return filmSeanceListMap;
 	}
 	
-	private void addBestSeancesFrom(List<Seance> seanceList, int nombreSeance, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+	private void addBestSeancesFrom(List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		if (departureTime==null) {
 			departureTime = Calendar.getInstance();
 		}
 		
 		if (modeTrajetPossible==null) {
 			modeTrajetPossible = new HashSet<>();
-			for(Path.ModeTrajet modeTrajet : Path.ModeTrajet.values()) {
-				modeTrajetPossible.add(modeTrajet);
-			}
+			Collections.addAll(modeTrajetPossible, Path.ModeTrajet.values());
 		}
 		Map<Path.ModeTrajet, Boolean> seanceAddedMap = new HashMap<>();
 		for(Path.ModeTrajet mode : modeTrajetPossible) {
