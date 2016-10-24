@@ -154,7 +154,7 @@ public class CinemaFinder {
 		}
 		boolean allSeanceAdded = false;
 		Iterator<Seance> it = seanceList.iterator();
-		do {
+		while(!allSeanceAdded && it.hasNext()) {
 			Seance seance = it.next();
 			Calendar seanceTime = seance.getDate();
 			Map<Path.ModeTrajet, Integer> tempsTrajetMap = seance.getCinema().getTempsTrajetMap();
@@ -176,7 +176,7 @@ public class CinemaFinder {
 					}
 				}
 			}
-		}while(!allSeanceAdded && it.hasNext());
+		}
 	}
 	
 	public void printCinemaList() {
