@@ -9,7 +9,6 @@ import com.movie.htmlparser.GoogleMoviesHtmlParser;
 import com.movie.locations.ClosestCinemas;
 import com.movie.locations.MyAddress;
 import com.movie.locations.Path;
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
 
@@ -58,12 +57,14 @@ public class CinemaFinder {
 	 * Permet d'update la liste des cinémas avec leurs séances.
 	 */
 	public void updateAllSeances() {
-		for (Cinema cinema : cinemaList) {
+		for (Iterator<Cinema> iterator = cinemaList.iterator(); iterator.hasNext(); ) {
+			Cinema cinema = iterator.next();
 			try {
 				GoogleMoviesHtmlParser.updateCinemaWithSeances(cinema);
 			} catch(HtmlParserException | IOException e) {
 				System.err.println("Le cinéma " + cinema.getNom() + " situé au \'" + cinema.getAdresse() + "\'" + " n'a pas pu être mis à jour avec les séances car : ");
 				e.printStackTrace();
+				iterator.remove();
 			}
 		}
 	}
@@ -95,10 +96,9 @@ public class CinemaFinder {
 	
 	/**
 	 * Permet de trouver les meilleurs séances à partir de la liste des cinémas mis à jour avec les séances et les temps de trajets.
-	 * @param nombreSeance Le nombre de séances à trouver
 	 * @return Une liste de taille nombreSeance contenant les meilleurs séances.
 	 */
-	public List<Seance> findBestSeances(int nombreSeance) {
+	public List<Seance> findBestSeances() {
 		this.bestSeanceList = new ArrayList<>();
 		
 		for(Cinema cinema : cinemaList) {
@@ -114,8 +114,8 @@ public class CinemaFinder {
 		return this.bestSeanceList;
 	}
 	
-	public Map<Film, List<Seance>> findBestSeancesForEachFilm(int nombreSeance) {
-		findBestSeances(nombreSeance);
+	public Map<Film, List<Seance>> findBestSeancesForEachFilm() {
+		findBestSeances();
 		Map<Film, List<Seance>> filmSeanceListMap = new HashMap<>();
 		for(Seance seance : bestSeanceList) {
 			Film film = seance.getFilm();
@@ -171,6 +171,13 @@ public class CinemaFinder {
 		}while(!allSeanceAdded && it.hasNext());
 	}
 	
-	
+	public void printCinemaList() {
+		if (cinemaList.isEmpty()) {
+			System.out.println("No cinema found.");
+		}
+		for (Cinema cinema : cinemaList) {
+			System.out.println(cinema);
+		}
+	}
 	
 }

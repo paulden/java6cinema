@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import com.movie.cinema.Cinema;
 import com.movie.cinema.CinemaFinder;
 import com.movie.cinema.Film;
 import com.movie.cinema.Seance;
@@ -20,20 +19,18 @@ public class TestCinemaFinder {
 		try {
 			cinemaFinder.findClosestCinemas(5000);
 			cinemaFinder.updateAllSeances();
-			for (Cinema cinema : cinemaFinder.getCinemaList()) {
-				System.out.println(cinema);
-			}
+			cinemaFinder.printCinemaList();
+
 			cinemaFinder.updateTempsTrajet();
-			for (Cinema cinema : cinemaFinder.getCinemaList()) {
-				System.out.println(cinema);
-			}
-			
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(0);
+			cinemaFinder.printCinemaList();
+
+			/*
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances();
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
 			
-			Map<Film, List<Seance>> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(0);
+			Map<Film, List<Seance>> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm();
 			for(Film film : filmSeanceListMap.keySet()) {
 				List<Seance> seanceList = filmSeanceListMap.get(film);
 				StringBuilder sb = new StringBuilder();
@@ -44,6 +41,7 @@ public class TestCinemaFinder {
 				sb.deleteCharAt(sb.length()-1).append("]");
 				System.out.println(sb.toString());
 			}
+			*/
 			
 		} catch (JSONException | IOException e) {
 			e.printStackTrace();
