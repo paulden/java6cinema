@@ -2,8 +2,14 @@ package com.movie.cinema;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.movie.exceptions.HtmlParserException;
 import com.movie.exceptions.NoPathException;
@@ -25,6 +31,8 @@ import org.json.JSONException;
 public class CinemaFinder {
 	
 	private List<Cinema> cinemaList;
+	
+	private List<Seance> bestSeanceList;
 
 	public CinemaFinder() {
 		this.cinemaList = new ArrayList<>();
@@ -94,6 +102,87 @@ public class CinemaFinder {
 
 		}
 	}
+	
+	/**
+	 * Permet de trouver les meilleurs séances à partir de la liste des cinémas mis à jour avec les séances et les temps de trajets.
+	 * @param nombreSeance Le nombre de séances à trouver
+	 * @return Une liste de taille nombreSeance contenant les meilleurs séances.
+	 */
+	public List<Seance> findBestSeances(int nombreSeance) {
+		this.bestSeanceList = new ArrayList<>();
+		
+		for(Cinema cinema : cinemaList) {
+			List<Film> filmCinemaList = cinema.getFilmList();
+			for(Film film : filmCinemaList) {
+				List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
+				List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
+				addBestSeancesFrom(seanceVFFilmCinemaList, nombreSeance, null, null);
+				addBestSeancesFrom(seanceVOSTFRFilmCinemaList, nombreSeance, null, null);
+			}
+		}		
+		
+		return this.bestSeanceList;
+	}
+	
+	public Map<Film, List<Seance>> findBestSeancesForEachFilm(int nombreSeance) {
+		findBestSeances(nombreSeance);
+		Map<Film, List<Seance>> filmSeanceListMap = new HashMap<>();
+		for(Seance seance : bestSeanceList) {
+			Film film = seance.getFilm();
+			if (filmSeanceListMap.containsKey(film)) {
+				List<Seance> seanceList = filmSeanceListMap.get(film);
+				seanceList.add(seance);
+			} else {
+				List<Seance> seanceList = new ArrayList<>();
+				seanceList.add(seance);
+				filmSeanceListMap.put(film, seanceList);
+			}
+		}
+		return filmSeanceListMap;
+	}
+	
+	private void addBestSeancesFrom(List<Seance> seanceList, int nombreSeance, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+		if (departureTime==null) {
+			departureTime = Calendar.getInstance();
+		}
+		
+		if (modeTrajetPossible==null) {
+			modeTrajetPossible = new HashSet<>();
+			for(Path.ModeTrajet modeTrajet : Path.ModeTrajet.values()) {
+				modeTrajetPossible.add(modeTrajet);
+			}
+		}
+		Map<Path.ModeTrajet, Boolean> seanceAddedMap = new HashMap<>();
+		for(Path.ModeTrajet mode : modeTrajetPossible) {
+			seanceAddedMap.put(mode, false);
+		}
+		boolean allSeanceAdded = false;
+		Iterator<Seance> it = seanceList.iterator();
+		do {
+			Seance seance = it.next();
+			Calendar seanceTime = seance.getDate();
+			Map<Path.ModeTrajet, Integer> tempsTrajetMap = seance.getCinema().getTempsTrajetMap();
+			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
+				if(modeTrajetPossible.contains(mode)) {
+					int duree = tempsTrajetMap.get(mode);
+					//Si l'heure de la séance est inférieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
+					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
+						seance.setModeTrajet(mode);
+						bestSeanceList.add(seance);
+						seanceAddedMap.put(mode, true);
+					}
+					
+					allSeanceAdded = true;
+					for(Boolean bool : seanceAddedMap.values()) {
+						if(bool == false) {
+							allSeanceAdded = false;
+						}
+					}
+				}
+			}
+		}while(!allSeanceAdded && it.hasNext());
+	}
+	
 	
 	
 }

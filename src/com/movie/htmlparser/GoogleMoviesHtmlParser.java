@@ -191,7 +191,11 @@ public final class GoogleMoviesHtmlParser {
 		}
 		
 		if(bestCinema != null) {
-			cinema.setFilmList(bestCinema.getFilmList());
+			bestCinema.setAdresse(cinemaAdresse);
+			bestCinema.setLat(cinema.getLat());
+			bestCinema.setLng(cinema.getLng());
+			cinema = bestCinema;
+			//cinema.setFilmList(bestCinema.getFilmList());
 		} else {
 			throw new HtmlParserException("Aucun cinéma n'a été trouvé correspondant au nom " + cinemaName + " et à l'adresse " + cinemaAdresse);
 		}
