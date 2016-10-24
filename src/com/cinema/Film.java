@@ -17,7 +17,7 @@ public class Film {
 	private String rated;
 	
 	private Cinema cinema;
-	
+
 	private List<Seance> seanceListVF;
 	
 	private List<Seance> seanceListVOSTFR;
