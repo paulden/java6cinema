@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.movie.cinema.Cinema;
 import com.movie.cinema.CinemaFinder;
+import com.movie.cinema.Film;
+import com.movie.cinema.Seance;
 import org.json.JSONException;
 
 public class TestCinemaFinder {
