@@ -109,7 +109,7 @@ public class CinemaFinder {
 	 * Permet de trouver les séances auxquelles l'utilisateur peut assister à partir de la liste des cinémas mis à jour avec les séances et les temps de trajet.
 	 * @return Une liste contenant les meilleures séances.
 	 */
-	public List<Seance> findBestSeances(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+	public List<Seance> findBestSeances(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		this.bestSeanceList = new ArrayList<>();
 		
 		for(Cinema cinema : cinemaList) {
@@ -118,8 +118,8 @@ public class CinemaFinder {
 				for (Film film : filmCinemaList) {
 					List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
 					List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
-					addBestSeancesFrom(seanceVFFilmCinemaList, departureTime, modeTrajetPossible);
-					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, departureTime, modeTrajetPossible);
+					addBestSeancesFrom(minutes, seanceVFFilmCinemaList, departureTime, modeTrajetPossible);
+					addBestSeancesFrom(minutes, seanceVOSTFRFilmCinemaList, departureTime, modeTrajetPossible);
 				}
 			} catch (NullPointerException e) {
 				System.out.println("No movie found for the cinema " + cinema.getNom());
@@ -129,8 +129,8 @@ public class CinemaFinder {
 		return this.bestSeanceList;
 	}
 	
-	public Map<String, Film> findBestSeancesForEachFilm(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
-		findBestSeances(departureTime, modeTrajetPossible);
+	public Map<String, Film> findBestSeancesForEachFilm(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+		findBestSeances(minutes, departureTime, modeTrajetPossible);
 		Map<String, Film> filmMap = new HashMap<>();
 		try {
 			for (Seance seance : bestSeanceList) {
@@ -156,29 +156,15 @@ public class CinemaFinder {
 		return filmMap;
 	}
 
-	/**
-	 * Get a list of seances the user has time to go to, within the amount of time he specified.
-	 * @param minutes the maximum time wanted by the user before a seance starts
-	 * @return seanceList a list of all the seances the user can go to in the amount of time he specified
-	 */
-	public List<Seance> findSeancesWithTimeConstraint(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
-		List<Seance> targetSeances = findBestSeances(departureTime, modeTrajetPossible);
+
+	
+	private void addBestSeancesFrom(int minutes, List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		int millis = minutes * 60000;
 
-		for (Iterator<Seance> iterator = targetSeances.iterator(); iterator.hasNext(); ) {
-			Seance seance = iterator.next();
-			if (seance.getDate().getTimeInMillis() > Calendar.getInstance().getTimeInMillis() + millis) {
-				iterator.remove();
-			}
-		}
-
-		return targetSeances;
-	}
-	
-	private void addBestSeancesFrom(List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		if (departureTime==null) {
 			departureTime = Calendar.getInstance();
 		}
+		long departureTimeInMillis = departureTime.getTimeInMillis();
 		
 		if (modeTrajetPossible==null) {
 			modeTrajetPossible = new HashSet<>();
@@ -193,13 +179,18 @@ public class CinemaFinder {
 		while(!allSeanceAdded && it.hasNext()) {
 			Seance seance = it.next();
 			Calendar seanceTime = seance.getDate();
+			long seanceMillisTime = seanceTime.getTimeInMillis();
+
 			Map<Path.ModeTrajet, Integer> tempsTrajetMap = seance.getCinema().getTempsTrajetMap();
 			boolean seanceAdded = false;
 			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
 				if(modeTrajetPossible.contains(mode)) {
 					int duree = tempsTrajetMap.get(mode);
 					//Si l'heure de la séance est supérieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
-					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
+					if(seanceMillisTime > departureTimeInMillis + (long) duree * 1000
+							&&
+							seanceMillisTime <= departureTimeInMillis + millis
+							) {
 						seance.getModeTrajetList().add(mode);
 						if (!seanceAdded) {
 							bestSeanceList.add(seance);
