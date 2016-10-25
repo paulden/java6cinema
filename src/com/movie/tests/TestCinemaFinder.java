@@ -70,7 +70,7 @@ public class TestCinemaFinder {
 			cinemaFinder.updateTempsTrajet("3 avenue sully prud'homme", modeTrajetPossible);
 			cinemaFinder.printCinemaList();
 
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(90, null, modeTrajetPossible);
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(0, null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
