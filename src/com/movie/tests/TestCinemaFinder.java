@@ -70,7 +70,7 @@ public class TestCinemaFinder {
 			cinemaFinder.updateTempsTrajet(modeTrajetPossible);
 			cinemaFinder.printCinemaList();
 
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(null, modeTrajetPossible);
+			List<Seance> bestSeanceList = cinemaFinder.findSeancesWithTimeConstraint(90, null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
