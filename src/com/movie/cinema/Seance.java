@@ -1,7 +1,7 @@
 package com.movie.cinema;
 import java.util.Calendar;
 
-import com.path_to_cinema.Path;
+import com.movie.locations.Path;
 
 /**
  * Class représentant une séance de cinéma.<br>
