@@ -1,6 +1,8 @@
 package com.movie.cinema;
 import java.util.Calendar;
 
+import com.movie.locations.Path;
+
 /**
  * Class représentant une séance de cinéma.<br>
  * Contient le {@link Film} associé, la date à laquelle passe le film et le {@link Cinema} où se déroule la séance.
@@ -12,6 +14,11 @@ public class Seance {
 	private Film film;
 	private Calendar date;
 	private Cinema cinema;
+	
+	/**
+	 * Le mode de trajet pour arriver à l'heure à cette séance.
+	 */
+	private Path.ModeTrajet modeTrajet;
 	
 	public Seance(Film film, int heure, int minutes, Cinema cinema) {
 		this.film = film;
@@ -51,6 +58,14 @@ public class Seance {
 
 	public void setCinema(Cinema cinema) {
 		this.cinema = cinema;
+	}
+
+	public Path.ModeTrajet getModeTrajet() {
+		return modeTrajet;
+	}
+
+	public void setModeTrajet(Path.ModeTrajet modeTrajet) {
+		this.modeTrajet = modeTrajet;
 	}
 
 	@Override

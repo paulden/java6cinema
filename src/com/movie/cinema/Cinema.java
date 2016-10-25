@@ -49,6 +49,7 @@ public class Cinema {
 		this.adresse = adresse;
 		this.lat = lat;
 		this.lng = lng;
+		filmList = new ArrayList<Film>();
 		tempsTrajetMap = new HashMap<>();
 	}
 	
