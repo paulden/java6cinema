@@ -70,12 +70,12 @@ public class TestCinemaFinder {
 			cinemaFinder.updateTempsTrajet(modeTrajetPossible);
 			cinemaFinder.printCinemaList();
 
-			List<Seance> bestSeanceList = cinemaFinder.findSeancesWithTimeConstraint(90, null, modeTrajetPossible);
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(90, null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
 
-			Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(null, null);
+			Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(90, null, null);
 			for(Film film : filmSeanceListMap.values()) {
 				System.out.println(film);
 			}
