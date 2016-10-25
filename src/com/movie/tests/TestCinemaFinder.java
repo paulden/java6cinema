@@ -36,12 +36,11 @@ public class TestCinemaFinder {
 		Film film = new Film(
 				"Les Sept Mercenaires",
 				"2h12mn",
-				"Classification: Tous publics",
-				cinema
+				"Classification: Tous publics"
 		);
 
 		film.addSeanceVOSTFR(
-				new Seance(film, 21, 0, cinema)
+				new Seance(film, 21, 0, cinema, Seance.Language.VF)
 		);
 		cinema.addFilm(film);
 		cinemaList.add(cinema);
