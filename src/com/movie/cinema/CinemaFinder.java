@@ -47,7 +47,7 @@ public class CinemaFinder {
 	 * @throws IOException in case of API connection problem
 	 * @throws JSONException in case of unexpected JSON object recieved
 	 */
-	public void findClosestCinemas(double radius) throws JSONException, IOException {
+	public void updateClosestCinemas(double radius) throws JSONException, IOException {
 		ClosestCinemas closestCinemas = new ClosestCinemas();
 		closestCinemas.setClosestCinemas(radius);
 		this.cinemaList = closestCinemas.getClosestCinemas();
@@ -108,9 +108,14 @@ public class CinemaFinder {
 	/**
 	 * Permet de trouver les séances auxquelles l'utilisateur peut assister à partir de la liste des cinémas mis à jour avec les séances et les temps de trajet.
 	 * @return Une liste contenant les meilleures séances.
+	 * @throws IOException 
+	 * @throws JSONException 
 	 */
-	public List<Seance> findBestSeances(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+	public List<Seance> findBestSeances(double radius, String departureAdress, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) throws JSONException, IOException {
 		this.bestSeanceList = new ArrayList<>();
+		updateClosestCinemas(radius);
+		updateAllSeances();
+		updateTempsTrajet(departureAdress, modeTrajetPossible);
 		
 		for(Cinema cinema : cinemaList) {
 			List<Film> filmCinemaList = cinema.getFilmList();
@@ -129,8 +134,8 @@ public class CinemaFinder {
 		return this.bestSeanceList;
 	}
 	
-	public Map<String, Film> findBestSeancesForEachFilm(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
-		findBestSeances(departureTime, modeTrajetPossible);
+	public Map<String, Film> findBestSeancesForEachFilm(double radius, String departureAdress, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) throws JSONException, IOException {
+		findBestSeances(radius, departureAdress, departureTime, modeTrajetPossible);
 		Map<String, Film> filmMap = new HashMap<>();
 		try {
 			for (Seance seance : bestSeanceList) {

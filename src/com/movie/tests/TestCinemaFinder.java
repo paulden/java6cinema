@@ -59,7 +59,7 @@ public class TestCinemaFinder {
 
 		CinemaFinder cinemaFinder = new CinemaFinder();
 		try {
-			cinemaFinder.findClosestCinemas(5000);
+			cinemaFinder.updateClosestCinemas(5000);
 			cinemaFinder.updateAllSeances();
 			cinemaFinder.printCinemaList();
 			
@@ -75,7 +75,7 @@ public class TestCinemaFinder {
 				System.out.println(seance);
 			}
 
-			Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(null, null);
+			Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(0, null, null, modeTrajetPossible);
 			for(Film film : filmSeanceListMap.values()) {
 				System.out.println(film);
 			}
