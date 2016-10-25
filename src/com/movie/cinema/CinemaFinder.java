@@ -72,9 +72,13 @@ public class CinemaFinder {
 	/**
 	 * Permet d'update la liste des cinémas avec le temps de trajet entre la personne et le cinéma.
 	 */
-	public void updateTempsTrajet() {
+	public void updateTempsTrajet(Set<Path.ModeTrajet> modeTrajetPossible) {
+		if (modeTrajetPossible == null) {
+			modeTrajetPossible = new HashSet<>();
+			Collections.addAll(modeTrajetPossible, Path.ModeTrajet.values());
+		}
 		for (Cinema cinema : cinemaList) {
-			for(Path.ModeTrajet modeTrajet : Path.ModeTrajet.values()) {
+			for(Path.ModeTrajet modeTrajet : modeTrajetPossible) {
 				Map<Path.ModeTrajet, Integer> cinemaMap = cinema.getTempsTrajetMap();
 				try {
 					MyAddress myAdress = new MyAddress();
@@ -150,8 +154,8 @@ public class CinemaFinder {
 	 * @param minutes the maximum time wanted by the user before a seance starts
 	 * @return seanceList a list of all the seances the user can go to in the amount of time he specified
 	 */
-	public List<Seance> findSeancesWithTimeConstraint(int minutes) {
-		List<Seance> targetSeances = findBestSeances(null, null);
+	public List<Seance> findSeancesWithTimeConstraint(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+		List<Seance> targetSeances = findBestSeances(departureTime, modeTrajetPossible);
 		int millis = minutes * 60000;
 
 		for (Iterator<Seance> iterator = targetSeances.iterator(); iterator.hasNext(); ) {

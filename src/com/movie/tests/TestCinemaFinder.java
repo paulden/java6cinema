@@ -63,7 +63,7 @@ public class TestCinemaFinder {
 			cinemaFinder.updateAllSeances();
 			cinemaFinder.printCinemaList();
 
-			cinemaFinder.updateTempsTrajet();
+			cinemaFinder.updateTempsTrajet(null);
 			cinemaFinder.printCinemaList();
 
 			Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
