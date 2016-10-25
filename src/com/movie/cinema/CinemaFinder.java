@@ -167,7 +167,7 @@ public class CinemaFinder {
 
 		for (Iterator<Seance> iterator = targetSeances.iterator(); iterator.hasNext(); ) {
 			Seance seance = iterator.next();
-			if (seance.getDate().getTimeInMillis() > millis) {
+			if (seance.getDate().getTimeInMillis() > Calendar.getInstance().getTimeInMillis() + millis) {
 				iterator.remove();
 			}
 		}
