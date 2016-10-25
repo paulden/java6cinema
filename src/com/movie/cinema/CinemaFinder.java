@@ -95,8 +95,8 @@ public class CinemaFinder {
 	}
 	
 	/**
-	 * Permet de trouver les meilleurs séances à partir de la liste des cinémas mis à jour avec les séances et les temps de trajets.
-	 * @return Une liste de taille nombreSeance contenant les meilleurs séances.
+	 * Permet de trouver les séances auxquelles l'utilisateur peut assister à partir de la liste des cinémas mis à jour avec les séances et les temps de trajet.
+	 * @return Une liste contenant les meilleures séances.
 	 */
 	public List<Seance> findBestSeances(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		this.bestSeanceList = new ArrayList<>();
@@ -143,6 +143,25 @@ public class CinemaFinder {
 			System.out.println("No movie found.");
 		}
 		return filmMap;
+	}
+
+	/**
+	 * Get a list of seances the user has time to go to, within the amount of time he specified.
+	 * @param minutes the maximum time wanted by the user before a seance starts
+	 * @return seanceList a list of all the seances the user can go to in the amount of time he specified
+	 */
+	public List<Seance> findSeancesWithTimeConstraint(int minutes) {
+		List<Seance> targetSeances = findBestSeances();
+		int millis = minutes * 60000;
+
+		for (Iterator<Seance> iterator = targetSeances.iterator(); iterator.hasNext(); ) {
+			Seance seance = iterator.next();
+			if (seance.getDate().getTimeInMillis() > millis) {
+				iterator.remove();
+			}
+		}
+
+		return targetSeances;
 	}
 	
 	private void addBestSeancesFrom(List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
