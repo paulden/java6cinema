@@ -67,7 +67,7 @@ public class TestCinemaFinder {
 			modeTrajetPossible.add(ModeTrajet.WALKING);
 			modeTrajetPossible.add(ModeTrajet.TRANSIT);
 
-			cinemaFinder.updateTempsTrajet(modeTrajetPossible);
+			cinemaFinder.updateTempsTrajet("3 avenue sully prud'homme", modeTrajetPossible);
 			cinemaFinder.printCinemaList();
 
 			List<Seance> bestSeanceList = cinemaFinder.findSeancesWithTimeConstraint(90, null, modeTrajetPossible);

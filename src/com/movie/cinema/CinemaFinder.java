@@ -72,22 +72,29 @@ public class CinemaFinder {
 	/**
 	 * Permet d'update la liste des cinémas avec le temps de trajet entre la personne et le cinéma.
 	 */
-	public void updateTempsTrajet(Set<Path.ModeTrajet> modeTrajetPossible) {
+	public void updateTempsTrajet(String adresseDepart, Set<Path.ModeTrajet> modeTrajetPossible) {
 		if (modeTrajetPossible == null) {
 			modeTrajetPossible = new HashSet<>();
 			Collections.addAll(modeTrajetPossible, Path.ModeTrajet.values());
 		}
+		
+		
+		MyAddress myAdress;
+		if(adresseDepart==null) {
+			myAdress = new MyAddress();
+		} else {
+			myAdress = new MyAddress(adresseDepart);
+		}
+		
+		double originLat = myAdress.getMyLat();
+		double originLng = myAdress.getMyLng();
+		
 		for (Cinema cinema : cinemaList) {
+			double destLat = cinema.getLat();
+			double destLng = cinema.getLng();
 			for(Path.ModeTrajet modeTrajet : modeTrajetPossible) {
 				Map<Path.ModeTrajet, Integer> cinemaMap = cinema.getTempsTrajetMap();
-				try {
-					MyAddress myAdress = new MyAddress();
-					double originLat = myAdress.getMyLat();
-					double originLng = myAdress.getMyLng();
-					
-					double destLat = cinema.getLat();
-					double destLng = cinema.getLng();
-					
+				try {	
 					Path path = new Path(originLat, originLng, destLat, destLng, modeTrajet.toString());
 					cinemaMap.put(modeTrajet, path.getValue());
 				} catch(IOException | NoPathException e) {
