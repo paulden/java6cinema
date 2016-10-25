@@ -16,13 +16,11 @@ public class Film {
 	
 	private String rated;
 	
-	private Cinema cinema;
-
 	private List<Seance> seanceListVF;
 	
 	private List<Seance> seanceListVOSTFR;
 
-	public Film(String name, String duree, String rated, Cinema cinema) {
+	public Film(String name, String duree, String rated) {
 		super();
 		this.name = name;
 		this.duree = duree;

@@ -11,7 +11,9 @@ import org.json.JSONException;
 
 public class TestCinemaFinder {
 
+	
 	public TestCinemaFinder() {
+		
 	}
 
 	public static void main(String[] args) {
@@ -25,21 +27,14 @@ public class TestCinemaFinder {
 			cinemaFinder.printCinemaList();
 
 
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances();
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(null, null);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
 
-			Map<Film, List<Seance>> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm();
-			for(Film film : filmSeanceListMap.keySet()) {
-				List<Seance> seanceList = filmSeanceListMap.get(film);
-				StringBuilder sb = new StringBuilder();
-				sb.append(film.getName()).append(":[");
-				for(Seance seance : seanceList) {
-					sb.append(seance).append(",");
-				}
-				sb.deleteCharAt(sb.length()-1).append("]");
-				System.out.println(sb.toString());
+			Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(null, null);
+			for(Film film : filmSeanceListMap.values()) {
+				System.out.println(film);
 			}
 
 		} catch (JSONException | IOException e) {

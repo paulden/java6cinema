@@ -98,7 +98,7 @@ public class CinemaFinder {
 	 * Permet de trouver les meilleurs séances à partir de la liste des cinémas mis à jour avec les séances et les temps de trajets.
 	 * @return Une liste de taille nombreSeance contenant les meilleurs séances.
 	 */
-	public List<Seance> findBestSeances() {
+	public List<Seance> findBestSeances(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		this.bestSeanceList = new ArrayList<>();
 		
 		for(Cinema cinema : cinemaList) {
@@ -107,8 +107,8 @@ public class CinemaFinder {
 				for (Film film : filmCinemaList) {
 					List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
 					List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
-					addBestSeancesFrom(seanceVFFilmCinemaList, null, null);
-					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, null, null);
+					addBestSeancesFrom(seanceVFFilmCinemaList, departureTime, modeTrajetPossible);
+					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, departureTime, modeTrajetPossible);
 				}
 			} catch (NullPointerException e) {
 				System.out.println("No movie found for the cinema " + cinema.getNom());
@@ -118,25 +118,31 @@ public class CinemaFinder {
 		return this.bestSeanceList;
 	}
 	
-	public Map<Film, List<Seance>> findBestSeancesForEachFilm() {
-		findBestSeances();
-		Map<Film, List<Seance>> filmSeanceListMap = new HashMap<>();
+	public Map<String, Film> findBestSeancesForEachFilm(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+		findBestSeances(departureTime, modeTrajetPossible);
+		Map<String, Film> filmMap = new HashMap<>();
 		try {
 			for (Seance seance : bestSeanceList) {
-				Film film = seance.getFilm();
-				if (filmSeanceListMap.containsKey(film)) {
-					List<Seance> seanceList = filmSeanceListMap.get(film);
-					seanceList.add(seance);
+				String filmName = seance.getFilm().getName();
+				Film film;
+				if (filmMap.containsKey(filmName)) {
+					film = filmMap.get(filmName);
 				} else {
-					List<Seance> seanceList = new ArrayList<>();
-					seanceList.add(seance);
-					filmSeanceListMap.put(film, seanceList);
+					film = new Film(filmName, seance.getFilm().getDuree(), seance.getFilm().getRated());
+					filmMap.put(filmName, film);
+				}
+				List<Seance> seanceListVF = film.getSeanceListVF();
+				List<Seance> seanceListVOSTFR = film.getSeanceListVOSTFR();
+				if (seance.getLanguage() == Seance.Language.VF) {
+					seanceListVF.add(seance);
+				} else {
+					seanceListVOSTFR.add(seance);
 				}
 			}
 		} catch (NullPointerException e) {
 			System.out.println("No movie found.");
 		}
-		return filmSeanceListMap;
+		return filmMap;
 	}
 	
 	private void addBestSeancesFrom(List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
@@ -161,19 +167,18 @@ public class CinemaFinder {
 			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
 				if(modeTrajetPossible.contains(mode)) {
 					int duree = tempsTrajetMap.get(mode);
-					//Si l'heure de la séance est inférieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
+					//Si l'heure de la séance est supérieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
 					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
-						seance.setModeTrajet(mode);
+						seance.getModeTrajetList().add(mode);
 						bestSeanceList.add(seance);
 						seanceAddedMap.put(mode, true);
 					}
-					
-					allSeanceAdded = true;
-					for(Boolean bool : seanceAddedMap.values()) {
-						if(!bool) {
-							allSeanceAdded = false;
-						}
-					}
+				}
+			}
+			allSeanceAdded = true;
+			for(Boolean bool : seanceAddedMap.values()) {
+				if(!bool) {
+					allSeanceAdded = false;
 				}
 			}
 		}
