@@ -1,17 +1,18 @@
-package com.htmlparser;
+package com.movie.htmlparser;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.movie.exceptions.HtmlParserException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.cinema.Cinema;
-import com.cinema.Film;
-import com.cinema.Seance;
+import com.movie.cinema.Cinema;
+import com.movie.cinema.Film;
+import com.movie.cinema.Seance;
 
 /**
  * GoogleMoviesHtmlParser permet de récupérer à partir du site google/movies, les séances de cinéma près d'un endroit donnée<br>

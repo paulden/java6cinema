@@ -1,7 +1,8 @@
-package com.path_to_cinema;
+package com.movie.locations;
 
 import java.io.IOException;
 
+import com.movie.exceptions.NoPathException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;

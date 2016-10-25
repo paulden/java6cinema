@@ -1,15 +1,16 @@
-package com.cinema;
+package com.movie.tests;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.movie.cinema.Cinema;
+import com.movie.cinema.CinemaFinder;
 import org.json.JSONException;
 
 public class TestCinemaFinder {
 
 	public TestCinemaFinder() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) {

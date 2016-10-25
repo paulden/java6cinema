@@ -1,4 +1,4 @@
-package com.cinema;
+package com.movie.cinema;
 import java.util.Calendar;
 
 import com.path_to_cinema.Path;
