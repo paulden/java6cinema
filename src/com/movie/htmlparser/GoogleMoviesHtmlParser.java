@@ -191,7 +191,7 @@ public final class GoogleMoviesHtmlParser {
 		}
 		
 		if(bestCinema != null) {
-			cinema.setFilmList(bestCinema.getFilmList());
+			cinema.setFilmList(bestCinema.getFilmList());;
 		} else {
 			throw new HtmlParserException("Aucun cinéma n'a été trouvé correspondant au nom " + cinemaName + " et à l'adresse " + cinemaAdresse);
 		}
@@ -241,7 +241,7 @@ public final class GoogleMoviesHtmlParser {
 			
 			//Si le nom du film n'est pas nul, on peut créer un objet Film avec les données récupérés.
 			if(nameMovie != null && !new String().equals(nameMovie)) {
-				Film film = new Film(nameMovie, duree, rated, cinema);
+				Film film = new Film(nameMovie, duree, rated);
 				
 				//On récupère le contenu html contenant les différentes séances.
 				Element allTimeAllLanguageElement = movie.getElementsByClass("times").first();
@@ -268,9 +268,9 @@ public final class GoogleMoviesHtmlParser {
 						int minutes = Integer.valueOf(heuresEtMinutes[1]);
 						//Si le langage n'est pas défini ou est VF, alors on ajoute une séance VF sinon on ajoute une séance VOSTFR
 						if(language==null || new String().equals(language) || VF.equals(language)) {
-							film.addSeanceVF(new Seance(film, heures, minutes, cinema));
+							film.addSeanceVF(new Seance(film, heures, minutes, cinema, Seance.Language.VF));
 						} else {
-							film.addSeanceVOSTFR(new Seance(film, heures, minutes, cinema));
+							film.addSeanceVOSTFR(new Seance(film, heures, minutes, cinema, Seance.Language.VOSTFR));
 						}
 					}			
 				}	

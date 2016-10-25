@@ -92,7 +92,7 @@ public class Path {
 		// Run a lot of tests to make sure we recieved correct results
 		JSONObject obj = new JSONObject(responseString);
 		JSONArray routes = obj.getJSONArray("routes");
-		if (routes == null) throw new NoPathException("No path found to go to this destination.");
+		if (routes == null || routes.length() == 0) throw new NoPathException("No path found to go to this destination.");
 		
 		JSONObject firstItinerary = routes.getJSONObject(0);
 		if (firstItinerary == null) throw new NoPathException("No path found to go to this destination.");

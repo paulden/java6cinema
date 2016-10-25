@@ -72,9 +72,13 @@ public class CinemaFinder {
 	/**
 	 * Permet d'update la liste des cinémas avec le temps de trajet entre la personne et le cinéma.
 	 */
-	public void updateTempsTrajet() {
+	public void updateTempsTrajet(Set<Path.ModeTrajet> modeTrajetPossible) {
+		if (modeTrajetPossible == null) {
+			modeTrajetPossible = new HashSet<>();
+			Collections.addAll(modeTrajetPossible, Path.ModeTrajet.values());
+		}
 		for (Cinema cinema : cinemaList) {
-			for(Path.ModeTrajet modeTrajet : Path.ModeTrajet.values()) {
+			for(Path.ModeTrajet modeTrajet : modeTrajetPossible) {
 				Map<Path.ModeTrajet, Integer> cinemaMap = cinema.getTempsTrajetMap();
 				try {
 					MyAddress myAdress = new MyAddress();
@@ -98,7 +102,7 @@ public class CinemaFinder {
 	 * Permet de trouver les séances auxquelles l'utilisateur peut assister à partir de la liste des cinémas mis à jour avec les séances et les temps de trajet.
 	 * @return Une liste contenant les meilleures séances.
 	 */
-	public List<Seance> findBestSeances() {
+	public List<Seance> findBestSeances(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		this.bestSeanceList = new ArrayList<>();
 		
 		for(Cinema cinema : cinemaList) {
@@ -107,8 +111,8 @@ public class CinemaFinder {
 				for (Film film : filmCinemaList) {
 					List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
 					List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
-					addBestSeancesFrom(seanceVFFilmCinemaList, null, null);
-					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, null, null);
+					addBestSeancesFrom(seanceVFFilmCinemaList, departureTime, modeTrajetPossible);
+					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, departureTime, modeTrajetPossible);
 				}
 			} catch (NullPointerException e) {
 				System.out.println("No movie found for the cinema " + cinema.getNom());
@@ -118,25 +122,31 @@ public class CinemaFinder {
 		return this.bestSeanceList;
 	}
 	
-	public Map<Film, List<Seance>> findBestSeancesForEachFilm() {
-		findBestSeances();
-		Map<Film, List<Seance>> filmSeanceListMap = new HashMap<>();
+	public Map<String, Film> findBestSeancesForEachFilm(Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+		findBestSeances(departureTime, modeTrajetPossible);
+		Map<String, Film> filmMap = new HashMap<>();
 		try {
 			for (Seance seance : bestSeanceList) {
-				Film film = seance.getFilm();
-				if (filmSeanceListMap.containsKey(film)) {
-					List<Seance> seanceList = filmSeanceListMap.get(film);
-					seanceList.add(seance);
+				String filmName = seance.getFilm().getName();
+				Film film;
+				if (filmMap.containsKey(filmName)) {
+					film = filmMap.get(filmName);
 				} else {
-					List<Seance> seanceList = new ArrayList<>();
-					seanceList.add(seance);
-					filmSeanceListMap.put(film, seanceList);
+					film = new Film(filmName, seance.getFilm().getDuree(), seance.getFilm().getRated());
+					filmMap.put(filmName, film);
+				}
+				List<Seance> seanceListVF = film.getSeanceListVF();
+				List<Seance> seanceListVOSTFR = film.getSeanceListVOSTFR();
+				if (seance.getLanguage() == Seance.Language.VF) {
+					seanceListVF.add(seance);
+				} else {
+					seanceListVOSTFR.add(seance);
 				}
 			}
 		} catch (NullPointerException e) {
 			System.out.println("No movie found.");
 		}
-		return filmSeanceListMap;
+		return filmMap;
 	}
 
 	/**
@@ -144,8 +154,8 @@ public class CinemaFinder {
 	 * @param minutes the maximum time wanted by the user before a seance starts
 	 * @return seanceList a list of all the seances the user can go to in the amount of time he specified
 	 */
-	public List<Seance> findSeancesWithTimeConstraint(int minutes) {
-		List<Seance> targetSeances = findBestSeances();
+	public List<Seance> findSeancesWithTimeConstraint(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+		List<Seance> targetSeances = findBestSeances(departureTime, modeTrajetPossible);
 		int millis = minutes * 60000;
 
 		for (Iterator<Seance> iterator = targetSeances.iterator(); iterator.hasNext(); ) {
@@ -180,19 +190,22 @@ public class CinemaFinder {
 			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
 				if(modeTrajetPossible.contains(mode)) {
 					int duree = tempsTrajetMap.get(mode);
-					//Si l'heure de la séance est inférieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
+					boolean seanceAdded = false;
+					//Si l'heure de la séance est supérieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
 					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
-						seance.setModeTrajet(mode);
-						bestSeanceList.add(seance);
+						seance.getModeTrajetList().add(mode);
+						if (!seanceAdded) {
+							bestSeanceList.add(seance);
+							seanceAdded = true;
+						}	
 						seanceAddedMap.put(mode, true);
 					}
-					
-					allSeanceAdded = true;
-					for(Boolean bool : seanceAddedMap.values()) {
-						if(!bool) {
-							allSeanceAdded = false;
-						}
-					}
+				}
+			}
+			allSeanceAdded = true;
+			for(Boolean bool : seanceAddedMap.values()) {
+				if(!bool) {
+					allSeanceAdded = false;
 				}
 			}
 		}

@@ -2,18 +2,26 @@ package com.movie.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.movie.cinema.Cinema;
 import com.movie.cinema.CinemaFinder;
 import com.movie.cinema.Film;
 import com.movie.cinema.Seance;
+import com.movie.cinema.Seance.Language;
+import com.movie.locations.Path;
+import com.movie.locations.Path.ModeTrajet;
+
 import org.json.JSONException;
 
 public class TestCinemaFinder {
 
+	
 	public TestCinemaFinder() {
+		
 	}
 
 	/**
@@ -34,12 +42,11 @@ public class TestCinemaFinder {
 		Film film = new Film(
 				"Les Sept Mercenaires",
 				"2h12mn",
-				"Classification: Tous publics",
-				cinema
+				"Classification: Tous publics"
 		);
 
 		film.addSeanceVOSTFR(
-				new Seance(film, 21, 0, cinema)
+				new Seance(film, 21, 0, cinema, Language.VF)
 		);
 		cinema.addFilm(film);
 		cinemaList.add(cinema);
@@ -56,25 +63,20 @@ public class TestCinemaFinder {
 			cinemaFinder.updateAllSeances();
 			cinemaFinder.printCinemaList();
 
-			cinemaFinder.updateTempsTrajet();
+			cinemaFinder.updateTempsTrajet(null);
 			cinemaFinder.printCinemaList();
 
-
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances();
+			Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
+			modeTrajetPossible.add(ModeTrajet.WALKING);
+			modeTrajetPossible.add(ModeTrajet.TRANSIT);
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
 
-			Map<Film, List<Seance>> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm();
-			for(Film film : filmSeanceListMap.keySet()) {
-				List<Seance> seanceList = filmSeanceListMap.get(film);
-				StringBuilder sb = new StringBuilder();
-				sb.append(film.getName()).append(":[");
-				for(Seance seance : seanceList) {
-					sb.append(seance).append(",");
-				}
-				sb.deleteCharAt(sb.length()-1).append("]");
-				System.out.println(sb.toString());
+			Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(null, null);
+			for(Film film : filmSeanceListMap.values()) {
+				System.out.println(film);
 			}
 
 		} catch (JSONException | IOException e) {

@@ -111,7 +111,17 @@ public class Cinema {
 	}
 
 	public void setFilmList(List<Film> filmList) {
-		this.filmList = filmList;
+		this.filmList = new ArrayList<>();
+		for (Film film : filmList) {
+			for(Seance seance : film.getSeanceListVF()) {
+				seance.setCinema(this);
+			}
+			for(Seance seance : film.getSeanceListVOSTFR()) {
+				seance.setCinema(this);
+			}
+			
+			this.filmList.add(film);		
+		}
 	}	
 
 	public Map<Path.ModeTrajet, Integer> getTempsTrajetMap() {
