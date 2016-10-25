@@ -187,10 +187,10 @@ public class CinemaFinder {
 			Seance seance = it.next();
 			Calendar seanceTime = seance.getDate();
 			Map<Path.ModeTrajet, Integer> tempsTrajetMap = seance.getCinema().getTempsTrajetMap();
+			boolean seanceAdded = false;
 			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
 				if(modeTrajetPossible.contains(mode)) {
 					int duree = tempsTrajetMap.get(mode);
-					boolean seanceAdded = false;
 					//Si l'heure de la séance est supérieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
 					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
 						seance.getModeTrajetList().add(mode);

@@ -62,13 +62,14 @@ public class TestCinemaFinder {
 			cinemaFinder.findClosestCinemas(5000);
 			cinemaFinder.updateAllSeances();
 			cinemaFinder.printCinemaList();
-
-			cinemaFinder.updateTempsTrajet(null);
-			cinemaFinder.printCinemaList();
-
+			
 			Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
 			modeTrajetPossible.add(ModeTrajet.WALKING);
 			modeTrajetPossible.add(ModeTrajet.TRANSIT);
+
+			cinemaFinder.updateTempsTrajet(modeTrajetPossible);
+			cinemaFinder.printCinemaList();
+
 			List<Seance> bestSeanceList = cinemaFinder.findSeancesWithTimeConstraint(90, null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
