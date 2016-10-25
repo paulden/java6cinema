@@ -159,7 +159,14 @@ public class CinemaFinder {
 
 	
 	private void addBestSeancesFrom(int minutes, List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
-		int millis = minutes * 60000;
+		long millis = minutes * 60000;
+		if (minutes == 0) {
+			Calendar now = Calendar.getInstance();
+			Calendar night = Calendar.getInstance();
+			night.set(Calendar.HOUR_OF_DAY, 23);
+			night.set(Calendar.MINUTE, 59);
+			millis = night.getTimeInMillis() - now.getTimeInMillis();
+		}
 
 		if (departureTime==null) {
 			departureTime = Calendar.getInstance();
