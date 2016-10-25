@@ -1,6 +1,5 @@
 package com.movie.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -11,35 +10,32 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.movie.locations.ClosestCinemas;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JSlider;
 
 import org.json.JSONException;
  
 //Cette classe correspond à l'objet fenêtre qui sera affichée au lancement
 
 public class Fenetre extends JFrame {
-private JPanel container = new JPanel();
-private JFormattedTextField jtf = new JFormattedTextField(NumberFormat.getIntegerInstance());
-private JLabel labelSearch = new JLabel("Saisissez un rayon de recherche (en km)");
+	
+//private JFormattedTextField jtf = new JFormattedTextField(NumberFormat.getIntegerInstance());
+//private JLabel labelSearch = new JLabel("Je veux aller dans un ciné situé à maximum (km) :");
 private JLabel labelResultsCinemas = new JLabel();
 private JLabel labelResultsTime = new JLabel();
 private JLabel labelResultsMovies = new JLabel();
 private JLabel labelResultsAddress = new JLabel();
-private JButton b = new JButton ("OK");
+private JButton b = new JButton ("J'y vais !");
 private JOptionPane jopWarning = new JOptionPane();
+private Slider slider = new Slider();
 
 //On récupère la résolution de l'utilisateur
 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -96,11 +92,14 @@ public Fenetre(){
   gbc.gridy = 0;
   gbc.gridheight = 1;
   gbc.gridwidth = GridBagConstraints.REMAINDER;
-  cell1.add(labelSearch);
-  cell1.add(jtf);
+  slider.setBackground(Color.WHITE);
+  cell1.add(slider);
   cell1.add(b);
   content.add(cell1, gbc);
   
+  int value = slider.getDistanceMax().getValue();
+  System.out.println("Valeur récupérée :" + value);
+ 
   //Bloc réservé à l'affichage des cinémas
   gbc.gridx = 0;
   gbc.gridy = 1;
@@ -132,13 +131,7 @@ public Fenetre(){
   gbc.gridheight = 1;
   cell8.add(labelResultsTime);
   content.add(cell8, gbc);
-    
-  //Mise en forme du champ de recherche
-  Font police = new Font("Arial", Font.BOLD, 14);
-  jtf.setFont(police);
-  jtf.setPreferredSize(new Dimension(150, 30));
-  jtf.setForeground(Color.BLUE);
-  
+
   //Ajout du bouton qui provient de la classe BoutonListener et qui dispose d'une
   //méthode permettant d'écouter les inputs et afficher les résultats
   b.addActionListener(new BoutonListener());
@@ -151,8 +144,8 @@ public Fenetre(){
 //de recherche) et d'afficher ensuite la liste des cinémas sous forme de String
 class BoutonListener implements ActionListener{
   public void actionPerformed(ActionEvent e) {
-    System.out.println("Distance saisie : " + jtf.getText() + " km");
-    int radius = Integer.parseInt(jtf.getText())*1000;
+    System.out.println("Distance saisie : " + slider.getDistanceMax().getValue() + " km");
+    int radius = slider.getDistanceMax().getValue()*1000;
     ClosestCinemas closestCinemas = new ClosestCinemas();
 		try {
 			closestCinemas.setClosestCinemas(radius);
@@ -165,10 +158,10 @@ class BoutonListener implements ActionListener{
 			 * simplement figure de test d'affichage à l'heure actuelle
 			 */
 			
-			String resultsCinemas = "<html>";
-			String resultsAddress = "<html>";
-			String resultsMovies = "<html>";
-			String resultsTime = "<html>";
+			String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
+			String resultsAddress = "<html> <h1 style ='color:blue; font-size:16;'> Adresses : </h1> <br> <br>";
+			String resultsMovies = "<html> <h1 style ='color:blue; font-size:16;'> Films : </h1> <br> <br>";
+			String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
 			
 			for(int i = 0; i<n;i++){
 				resultsCinemas = resultsCinemas + closestCinemas.getClosestCinemas().get(i).getNom() + "<br>";
