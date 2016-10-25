@@ -1,9 +1,7 @@
 package com.movie.cinema;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.movie.exceptions.HtmlParserException;
 import com.movie.exceptions.NoPathException;
@@ -11,7 +9,6 @@ import com.movie.htmlparser.GoogleMoviesHtmlParser;
 import com.movie.locations.ClosestCinemas;
 import com.movie.locations.MyAddress;
 import com.movie.locations.Path;
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
 
@@ -25,6 +22,8 @@ import org.json.JSONException;
 public class CinemaFinder {
 	
 	private List<Cinema> cinemaList;
+	
+	private List<Seance> bestSeanceList;
 
 	public CinemaFinder() {
 		this.cinemaList = new ArrayList<>();
@@ -45,27 +44,27 @@ public class CinemaFinder {
 	/**
 	 * Permet de set la liste des cinémas avec la liste des cinémas les plus proches.
 	 * @param radius Le rayon de la recherche en mètres
-	 * @throws IOException 
-	 * @throws JSONException 
-	 * @throws ClientProtocolException 
+	 * @throws IOException in case of API connection problem
+	 * @throws JSONException in case of unexpected JSON object recieved
 	 */
-	public void findClosestCinemas(double radius) throws ClientProtocolException, JSONException, IOException {
+	public void findClosestCinemas(double radius) throws JSONException, IOException {
 		ClosestCinemas closestCinemas = new ClosestCinemas();
 		closestCinemas.setClosestCinemas(radius);
-		List<Cinema> closestCinemaList = closestCinemas.getClosestCinemas();
-		this.cinemaList = closestCinemaList;
+		this.cinemaList = closestCinemas.getClosestCinemas();
 	}
 	
 	/**
 	 * Permet d'update la liste des cinémas avec leurs séances.
 	 */
 	public void updateAllSeances() {
-		for (Cinema cinema : cinemaList) {
+		for (Iterator<Cinema> iterator = cinemaList.iterator(); iterator.hasNext(); ) {
+			Cinema cinema = iterator.next();
 			try {
 				GoogleMoviesHtmlParser.updateCinemaWithSeances(cinema);
 			} catch(HtmlParserException | IOException e) {
 				System.err.println("Le cinéma " + cinema.getNom() + " situé au \'" + cinema.getAdresse() + "\'" + " n'a pas pu être mis à jour avec les séances car : ");
 				e.printStackTrace();
+				iterator.remove();
 			}
 		}
 	}
@@ -95,5 +94,98 @@ public class CinemaFinder {
 		}
 	}
 	
+	/**
+	 * Permet de trouver les meilleurs séances à partir de la liste des cinémas mis à jour avec les séances et les temps de trajets.
+	 * @return Une liste de taille nombreSeance contenant les meilleurs séances.
+	 */
+	public List<Seance> findBestSeances() {
+		this.bestSeanceList = new ArrayList<>();
+		
+		for(Cinema cinema : cinemaList) {
+			List<Film> filmCinemaList = cinema.getFilmList();
+			try {
+				for (Film film : filmCinemaList) {
+					List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
+					List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
+					addBestSeancesFrom(seanceVFFilmCinemaList, null, null);
+					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, null, null);
+				}
+			} catch (NullPointerException e) {
+				System.out.println("No movie found for the cinema " + cinema.getNom());
+			}
+		}		
+		
+		return this.bestSeanceList;
+	}
+	
+	public Map<Film, List<Seance>> findBestSeancesForEachFilm() {
+		findBestSeances();
+		Map<Film, List<Seance>> filmSeanceListMap = new HashMap<>();
+		try {
+			for (Seance seance : bestSeanceList) {
+				Film film = seance.getFilm();
+				if (filmSeanceListMap.containsKey(film)) {
+					List<Seance> seanceList = filmSeanceListMap.get(film);
+					seanceList.add(seance);
+				} else {
+					List<Seance> seanceList = new ArrayList<>();
+					seanceList.add(seance);
+					filmSeanceListMap.put(film, seanceList);
+				}
+			}
+		} catch (NullPointerException e) {
+			System.out.println("No movie found.");
+		}
+		return filmSeanceListMap;
+	}
+	
+	private void addBestSeancesFrom(List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
+		if (departureTime==null) {
+			departureTime = Calendar.getInstance();
+		}
+		
+		if (modeTrajetPossible==null) {
+			modeTrajetPossible = new HashSet<>();
+			Collections.addAll(modeTrajetPossible, Path.ModeTrajet.values());
+		}
+		Map<Path.ModeTrajet, Boolean> seanceAddedMap = new HashMap<>();
+		for(Path.ModeTrajet mode : modeTrajetPossible) {
+			seanceAddedMap.put(mode, false);
+		}
+		boolean allSeanceAdded = false;
+		Iterator<Seance> it = seanceList.iterator();
+		while(!allSeanceAdded && it.hasNext()) {
+			Seance seance = it.next();
+			Calendar seanceTime = seance.getDate();
+			Map<Path.ModeTrajet, Integer> tempsTrajetMap = seance.getCinema().getTempsTrajetMap();
+			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
+				if(modeTrajetPossible.contains(mode)) {
+					int duree = tempsTrajetMap.get(mode);
+					//Si l'heure de la séance est inférieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
+					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
+						seance.setModeTrajet(mode);
+						bestSeanceList.add(seance);
+						seanceAddedMap.put(mode, true);
+					}
+					
+					allSeanceAdded = true;
+					for(Boolean bool : seanceAddedMap.values()) {
+						if(!bool) {
+							allSeanceAdded = false;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void printCinemaList() {
+		if (cinemaList.isEmpty()) {
+			System.out.println("No cinema found.");
+		}
+		for (Cinema cinema : cinemaList) {
+			System.out.println(cinema);
+		}
+	}
 	
 }
