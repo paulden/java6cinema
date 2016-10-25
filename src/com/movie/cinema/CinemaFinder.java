@@ -151,7 +151,7 @@ public class CinemaFinder {
 	 * @return seanceList a list of all the seances the user can go to in the amount of time he specified
 	 */
 	public List<Seance> findSeancesWithTimeConstraint(int minutes) {
-		List<Seance> targetSeances = findBestSeances();
+		List<Seance> targetSeances = findBestSeances(null, null);
 		int millis = minutes * 60000;
 
 		for (Iterator<Seance> iterator = targetSeances.iterator(); iterator.hasNext(); ) {
@@ -186,10 +186,14 @@ public class CinemaFinder {
 			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
 				if(modeTrajetPossible.contains(mode)) {
 					int duree = tempsTrajetMap.get(mode);
+					boolean seanceAdded = false;
 					//Si l'heure de la séance est supérieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
 					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
 						seance.getModeTrajetList().add(mode);
-						bestSeanceList.add(seance);
+						if (!seanceAdded) {
+							bestSeanceList.add(seance);
+							seanceAdded = true;
+						}	
 						seanceAddedMap.put(mode, true);
 					}
 				}

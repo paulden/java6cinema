@@ -2,13 +2,19 @@ package com.movie.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.movie.cinema.Cinema;
 import com.movie.cinema.CinemaFinder;
 import com.movie.cinema.Film;
 import com.movie.cinema.Seance;
+import com.movie.cinema.Seance.Language;
+import com.movie.locations.Path;
+import com.movie.locations.Path.ModeTrajet;
+
 import org.json.JSONException;
 
 public class TestCinemaFinder {
@@ -36,12 +42,11 @@ public class TestCinemaFinder {
 		Film film = new Film(
 				"Les Sept Mercenaires",
 				"2h12mn",
-				"Classification: Tous publics",
-				cinema
+				"Classification: Tous publics"
 		);
 
 		film.addSeanceVOSTFR(
-				new Seance(film, 21, 0, cinema)
+				new Seance(film, 21, 0, cinema, Language.VF)
 		);
 		cinema.addFilm(film);
 		cinemaList.add(cinema);
@@ -61,8 +66,10 @@ public class TestCinemaFinder {
 			cinemaFinder.updateTempsTrajet();
 			cinemaFinder.printCinemaList();
 
-
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(null, null);
+			Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
+			modeTrajetPossible.add(ModeTrajet.WALKING);
+			modeTrajetPossible.add(ModeTrajet.TRANSIT);
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 			}
