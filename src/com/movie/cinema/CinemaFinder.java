@@ -14,15 +14,21 @@ import org.json.JSONException;
 
 
 /**
- * Class récupérant les cinémas les plus proches, puis récupérant les horaires de ces cinémas, pour<br>
- * enfin pouvoir trouver les cinémas les plus adaptés en fonction des séances et des distances aux cinémas.
+ * This class uses the methods from all other classes to find the cinemas that are closest to the user.<br>
+ * It can also retrieve these cinema's showtime, to finally give the user a personal list of shows he can get to in time.
  * @author Kévin
  *
  */
 public class CinemaFinder {
-	
+
+	/**
+	 * A list of the cinemas close to the user
+	 */
 	private List<Cinema> cinemaList;
-	
+
+	/**
+	 * A showtime list of movies the user can get to in time
+	 */
 	private List<Seance> bestSeanceList;
 
 	public CinemaFinder() {
@@ -42,10 +48,10 @@ public class CinemaFinder {
 	}
 	
 	/**
-	 * Permet de set la liste des cinémas avec la liste des cinémas les plus proches.
-	 * @param radius Le rayon de la recherche en mètres
+	 * Sets the cinemaList with the list of cinemas within a given radius
+	 * @param radius the search radius in meters
 	 * @throws IOException in case of API connection problem
-	 * @throws JSONException in case of unexpected JSON object recieved
+	 * @throws JSONException in case of unexpected JSON object received
 	 */
 	public void findClosestCinemas(double radius) throws JSONException, IOException {
 		ClosestCinemas closestCinemas = new ClosestCinemas();
@@ -54,7 +60,7 @@ public class CinemaFinder {
 	}
 	
 	/**
-	 * Permet d'update la liste des cinémas avec leurs séances.
+	 * Update the cinema list by adding the shows to the cinemas in cinemaList.
 	 */
 	public void updateAllSeances() {
 		for (Iterator<Cinema> iterator = cinemaList.iterator(); iterator.hasNext(); ) {
@@ -70,7 +76,9 @@ public class CinemaFinder {
 	}
 	
 	/**
-	 * Permet d'update la liste des cinémas avec le temps de trajet entre la personne et le cinéma.
+	 * Updates the cinemaList by adding the time it takes for the user to reach the cinema, using only specified transportation modes.
+	 * @param adresseDepart : The users's location or the location he wants to start from
+	 * @param modeTrajetPossible : A set of the transportation modes the user is willing to use to get to the cinema
 	 */
 	public void updateTempsTrajet(String adresseDepart, Set<Path.ModeTrajet> modeTrajetPossible) {
 		if (modeTrajetPossible == null) {
@@ -106,8 +114,12 @@ public class CinemaFinder {
 	}
 	
 	/**
-	 * Permet de trouver les séances auxquelles l'utilisateur peut assister à partir de la liste des cinémas mis à jour avec les séances et les temps de trajet.
-	 * @return Une liste contenant les meilleures séances.
+	 * Finds a list of shows the user can get to based on the list of closest cinemas updated with the show list and the transportation time.<br>
+	 * This method also sets the CinemaFinder's bestSeanceList attribute.
+	 * @param minutes : the maximum time the user is wiling to wait before the show starts, in minutes
+	 * @param departureTime : the moment when the user will be available to start going to a cinema (Calendar)
+	 * @param modeTrajetPossible :  A set of the transportation modes the user is willing to use to get to the cinema
+	 * @return A list containing the best shows for the user
 	 */
 	public List<Seance> findBestSeances(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		this.bestSeanceList = new ArrayList<>();
@@ -128,7 +140,15 @@ public class CinemaFinder {
 		
 		return this.bestSeanceList;
 	}
-	
+
+	/**
+	 * This function uses the findBestSeances method to return a movie/shows map. <br>
+	 * It allows the user to see all the shows he can go to, sorted by movie.
+	 * @param minutes : the maximum time the user is wiling to wait before the show starts, in minutes
+	 * @param departureTime : the moment when the user will be available to start going to a cinema (Calendar)
+	 * @param modeTrajetPossible :  A set of the transportation modes the user is willing to use to get to the cinema
+	 * @return A movie/shows map
+	 */
 	public Map<String, Film> findBestSeancesForEachFilm(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		findBestSeances(minutes, departureTime, modeTrajetPossible);
 		Map<String, Film> filmMap = new HashMap<>();
@@ -157,7 +177,14 @@ public class CinemaFinder {
 	}
 
 
-	
+	/**
+	 * This function goes through a list of shows to select only the ones the user can get to in the specified amount of time.<br>
+	 * The selected shows are added to the bestSeanceList attribute.
+	 * @param minutes : the maximum time the user is wiling to wait before the show starts, in minutes
+	 * @param departureTime : the moment when the user will be available to start going to a cinema (Calendar)
+	 * @param modeTrajetPossible :  A set of the transportation modes the user is willing to use to get to the cinema
+	 * @param seanceList : a list of shows
+	 */
 	private void addBestSeancesFrom(int minutes, List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		long millis = minutes * 60000;
 		if (minutes == 0) {

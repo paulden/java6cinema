@@ -42,7 +42,7 @@ public class Path {
 		}
 		
 		/**
-		 * Permet de récupérer le mode du trajet.
+		 * Prints a transportation mode
 		 */
 		@Override
 		public String toString() {

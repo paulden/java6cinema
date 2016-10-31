@@ -1,7 +1,7 @@
 package com.movie.exceptions;
 
 /**
- * Exception si le parser html n'a pas trouvé ce qu'il recherchait.
+ * Exception class to handle the case when the html parser didn't find what we wanted.
  * @author Kévin
  */
 public class HtmlParserException extends Exception {
