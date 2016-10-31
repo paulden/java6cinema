@@ -17,13 +17,18 @@ public class TestClosestCinemas {
 	/**
 	 * Tests the setClosestCinemas method for a 10km-radius
 	 */
-	public static void main(String[] args) throws IOException, JSONException {
+	public static void main(String[] args) {
 
-		closestCinemas.setClosestCinemas(10000);
-		List<Cinema> cinemaList = closestCinemas.getClosestCinemas();
+		try {
+			closestCinemas.setClosestCinemas(10000);
+			List<Cinema> cinemaList = closestCinemas.getClosestCinemas();
 
-		for(Cinema cinema : cinemaList){
-			System.out.println(cinema.toString());
+			for (Cinema cinema : cinemaList) {
+				System.out.println(cinema.toString());
+			}
+		} catch (IOException | JSONException e) {
+			System.out.println("An error occurred :");
+			e.printStackTrace();
 		}
 	}
 
