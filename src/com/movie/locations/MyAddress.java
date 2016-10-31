@@ -27,8 +27,6 @@ public class MyAddress {
 	private double myLat;
 	private double myLng;
 
-	private static String MY_API_KEY = "AIzaSyCm77ySoeF1Kzu7BaxaW7wlUfx0heV9mj4";
-
 	/**
 	 * First constructor without any arguments : generates the GPS coordinates from the user's IP address.
 	 */
@@ -36,8 +34,8 @@ public class MyAddress {
 		try {
 			HttpClient httpClient = HttpClientBuilder.create().build();
 			setMyIP(httpClient);
-			String requete = "http://ip-api.com/json/"+getMyIP();
-			JSONObject obj = getJsonResponse(requete, httpClient);
+			String request = "http://ip-api.com/json/"+getMyIP();
+			JSONObject obj = getJsonResponse(request, httpClient);
 			this.myLat = obj.getDouble("lat");
 			this.myLng = obj.getDouble("lon");
 		} catch (IOException | JSONException e) {
@@ -74,8 +72,8 @@ public class MyAddress {
 	 * Uses an API to get the user's IP
  	 */
 	public void setMyIP(HttpClient httpClient) throws IOException, JSONException{
-		String requete = "https://api.ipify.org/?format=json";
-		JSONObject obj = getJsonResponse(requete, httpClient);
+		String request = "https://api.ipify.org/?format=json";
+		JSONObject obj = getJsonResponse(request, httpClient);
 		this.myIP = obj.getString("ip");
 	}
 	
@@ -88,16 +86,16 @@ public class MyAddress {
  	 */
 	public void setMyLat()throws IOException, JSONException{
 		HttpClient httpClient = HttpClientBuilder.create().build();
-		String requete = "http://ip-api.com/json/"+getMyIP();
-		JSONObject obj = getJsonResponse(requete, httpClient);
+		String request = "http://ip-api.com/json/"+getMyIP();
+		JSONObject obj = getJsonResponse(request, httpClient);
 		this.myLat = obj.getDouble("lat");
 	}
 
 	
 	public void setMyLng()throws IOException, JSONException{
 		HttpClient httpClient = HttpClientBuilder.create().build();
-		String requete = "http://ip-api.com/json/"+getMyIP();
-		JSONObject obj = getJsonResponse(requete, httpClient);
+		String request = "http://ip-api.com/json/"+getMyIP();
+		JSONObject obj = getJsonResponse(request, httpClient);
 		this.myLng = obj.getDouble("lon");
 	}
 
@@ -110,8 +108,8 @@ public class MyAddress {
 	 */
 	public void setCoordinates(String address, HttpClient httpClient) throws IOException, AddressNotFoundException {
 		// the request to google maps api
-		String requete = generateLocationRequest(address);
-		JSONObject obj = getJsonResponse(requete, httpClient);
+		String request = generateLocationRequest(address);
+		JSONObject obj = getJsonResponse(request, httpClient);
 
 		// Looking for the right field in Json object
 		JSONArray results = obj.getJSONArray("results");
@@ -124,16 +122,24 @@ public class MyAddress {
 
 	}
 
-	// Generate the request string from the address in postal form.
+	/**
+	 * Generate the request string from the address in postal form.
+	 * @param address : The address in string form. Example : "5 avenue Sully Prudhomme, 92295, Châtenay-Malabry"
+	 * @return The properly formatted request
+ 	 */
 	private String generateLocationRequest(String address) {
+		String MY_API_KEY = "AIzaSyCm77ySoeF1Kzu7BaxaW7wlUfx0heV9mj4";
+
 		String request = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 		request += address.replace(" ", "+");
 		request += "&key=" + MY_API_KEY;
 		return request;
 	}
 
-	// Separate the client "business" for clarity purposes
-	public JSONObject getJsonResponse(String request, HttpClient httpClient) throws IOException{
+	/**
+	 * Separate the API client "business" for code clarity purposes
+ 	 */
+	private JSONObject getJsonResponse(String request, HttpClient httpClient) throws IOException{
 		HttpGet getRequest = new HttpGet(request);
 		getRequest.addHeader("accept", "application/json");
 		HttpResponse res = httpClient.execute(getRequest);
