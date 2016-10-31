@@ -9,9 +9,6 @@ import com.movie.htmlparser.GoogleMoviesHtmlParser;
  */
 public class TestHtmlParser {
 	
-	public static String VF = "Dubbed in French";
-	public static String VOSTFR = "Subtitled in French";
-	
 	public static void main(String[] args) {
 		try {
 			for(Cinema cinema : GoogleMoviesHtmlParser.getAllCinemaWithSeancesNearAPlace("antony")) {

@@ -13,6 +13,9 @@ import com.movie.locations.Path;
  */
 public class TestTimeToCinema {
 
+	/**
+	 * Tests a path from Centrale to Châtenay-Malabry REX cinema.
+	 */
 	public static void main(String[] args) {
 		double origin_lat = 48.7648573;
 		double origin_lng = 2.2885256;

@@ -28,17 +28,22 @@ public class TestCinemaFinder {
 
 		CinemaFinder cinemaFinder = new CinemaFinder();
 		try {
+			// find the closest cinema in a 5km radius
 			cinemaFinder.findClosestCinemas(5000);
+			// update with the shows
 			cinemaFinder.updateAllSeances();
 			cinemaFinder.printCinemaList();
-			
+
+			// We choose to test the case where the user only wants to walk or use public transportation
 			Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
 			modeTrajetPossible.add(ModeTrajet.WALKING);
 			modeTrajetPossible.add(ModeTrajet.TRANSIT);
 
+			// We test the functions for a user located in Centrale
 			cinemaFinder.updateTempsTrajet("3 avenue sully prud'homme", modeTrajetPossible);
 			cinemaFinder.printCinemaList();
 
+			// Printing the shows that were found
 			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(0, null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
