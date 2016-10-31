@@ -20,7 +20,6 @@ import java.util.Set;
 import com.movie.cinema.CinemaFinder;
 import com.movie.cinema.Film;
 import com.movie.cinema.Seance;
-import com.movie.locations.ClosestCinemas;
 import com.movie.locations.Path;
 import com.movie.locations.Path.ModeTrajet;
 
@@ -30,8 +29,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-
 import org.json.JSONException;
  
 /** This class builds the main window where the user may enter information
@@ -50,7 +47,7 @@ private JLabel labelResultsCinemas = new JLabel();
 private JLabel labelResultsTime = new JLabel();
 private JLabel labelResultsMovies = new JLabel();
 private JLabel labelResultsAddress = new JLabel();
-private JButton b = new JButton ("J'y vais...");
+private JButton b = new JButton ("C'est parti !");
 private JOptionPane jopWarning = new JOptionPane();
 private Slider sliderDistance = new Slider();
 private JFormattedTextField maxTime = new JFormattedTextField(NumberFormat.getIntegerInstance());
@@ -58,10 +55,10 @@ private JLabel maxTimeLabel = new JLabel("Temps maximum avant le début de la s�
 
 //Checkboxes to allow user select (a) travelling mode(s)-----------
 JPanel travellingModes = new JPanel();;
-Checkbox walking = new Checkbox("En marchant");
-Checkbox driving = new Checkbox("En voiture");
-Checkbox transit = new Checkbox("En transport en commun");
-Checkbox bicycling = new Checkbox("A bicylette");
+Checkbox walking = new Checkbox("J'y vais à pied");
+Checkbox driving = new Checkbox("J'y vais en voiture");
+Checkbox transit = new Checkbox("J'y vais en transport en commun");
+Checkbox bicycling = new Checkbox("J'y vais à bicylette");
 //----------------------------------------------------------------
 
 //Getting user's resolution so that the dimension will be adapted even if resolutions are different
@@ -69,6 +66,9 @@ Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 double userWidth = screenSize.getWidth();
 double userHeight = screenSize.getHeight();
 
+/**Main constructor of our window
+ * which is to be used as a final representation of the program
+ */
 public Fenetre(){
 	//Main window
   this.setTitle("Recherche de séances de cinéma");
@@ -86,29 +86,32 @@ public Fenetre(){
   cell1.setBackground(Color.WHITE);
   cell1.setPreferredSize(new Dimension((int)(userWidth*0.80), (int)(userHeight*0.20)));
   
+  JPanel cell2 = new JPanel();
+  cell1.setBackground(Color.WHITE);
+  cell1.setPreferredSize(new Dimension((int)(userWidth*0.80), (int)(userHeight*0.10)));
   
   JPanel cell5 = new JPanel();
   cell5.setBackground(Color.WHITE);
-  cell5.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.60)));
+  cell5.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.50)));
   
   JPanel cell6 = new JPanel();
   cell6.setBackground(Color.WHITE);
-  cell6.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.60)));
+  cell6.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.50)));
   
   JPanel cell7 = new JPanel();
   cell7.setBackground(Color.WHITE);
-  cell7.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.60)));
+  cell7.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.50)));
   
   JPanel cell8 = new JPanel();
   cell8.setBackground(Color.WHITE);
-  cell8.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.60)));
+  cell8.setPreferredSize(new Dimension((int)(userWidth*0.20), (int)(userHeight*0.50)));
   
   //----------------------------------------------
   
   //This global JPanel will receive the previous JPanels previously built and organize them 
   //following a GridBagLayout structure
   JPanel content = new JPanel();
-  content.setPreferredSize(new Dimension((int)(userWidth*0.80), (int)(userHeight*0.70)));
+  content.setPreferredSize(new Dimension((int)(userWidth*0.80), (int)(userHeight*0.80)));
   content.setBackground(Color.WHITE);
   //On définit le layout manager
   content.setLayout(new GridBagLayout());
@@ -123,7 +126,7 @@ public Fenetre(){
   gbc.gridwidth = GridBagConstraints.REMAINDER;
   sliderDistance.setBackground(Color.WHITE);
   cell1.add(sliderDistance);
-  cell1.add(b);
+  travellingModes.setBackground(Color.WHITE);
   travellingModes.setLayout(new GridLayout(4, 1));
   travellingModes.add(walking);
   travellingModes.add(driving);
@@ -134,37 +137,48 @@ public Fenetre(){
   cell1.add(maxTime);
   cell1.add(maxTimeLabel);
   content.add(cell1, gbc);
+  
+  //Block toggling button
+  gbc.gridx = 0;
+  gbc.gridy = 1;
+  gbc.gridheight = 1;
+  gbc.gridwidth = GridBagConstraints.REMAINDER;
+  Font fontButton = new Font("Sans Serif", Font.BOLD, 20);
+  b.setFont(fontButton);
+  b.setPreferredSize(new Dimension(200, 50));
+  cell2.add(b);
+  content.add(cell2, gbc);
  
   //Block toggling cinemas
   gbc.gridx = 0;
-  gbc.gridy = 1;
+  gbc.gridy = 2;
   gbc.gridwidth = 1;
   gbc.gridheight = 1;
-  cell5.add(labelResultsCinemas);
+  cell5.add(labelResultsMovies);
   content.add(cell5, gbc);
   
   //Block toggling cinemas addresses
   gbc.gridx = 1;
-  gbc.gridy = 1;
+  gbc.gridy = 2;
   gbc.gridwidth = 1;
   gbc.gridheight = 1;
-  cell6.add(labelResultsAddress);
+  cell6.add(labelResultsCinemas);
   content.add(cell6, gbc);
   
   //Block toggling movies
   gbc.gridx = 2;
-  gbc.gridy = 1;
+  gbc.gridy = 2;
   gbc.gridwidth = 1;
   gbc.gridheight = 1;
-  cell7.add(labelResultsMovies);
+  cell7.add(labelResultsTime);
   content.add(cell7, gbc);
   
   //Block toggling time of show
   gbc.gridx = 3;
-  gbc.gridy = 1;
+  gbc.gridy = 2;
   gbc.gridwidth = GridBagConstraints.REMAINDER;
   gbc.gridheight = 1;
-  cell8.add(labelResultsTime);
+  cell8.add(labelResultsAddress);
   content.add(cell8, gbc);
 
   //This ButtonListener (defined below) implements a method to execute a method when the user
@@ -237,7 +251,6 @@ class ButtonListener implements ActionListener{
 			
 			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
-				System.out.println("SEANCES :");
 				System.out.println(seance);
 				resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
 				resultsAddress = resultsAddress + seance.getCinema().getAdresse() + "<br>";
