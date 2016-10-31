@@ -3,7 +3,7 @@ import com.movie.cinema.Cinema;
 import com.movie.htmlparser.GoogleMoviesHtmlParser;
 
 /**
- * Class contenant un main pour tester le {@link GoogleMoviesHtmlParser}.
+ * Tests the {@link GoogleMoviesHtmlParser} class methods.
  * @author Kévin
  *
  */

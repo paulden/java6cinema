@@ -5,6 +5,9 @@ import java.io.IOException;
 import com.movie.locations.ClosestCinemas;
 import org.json.JSONException;
 
+/**
+ * Tests the ClosestCinema class methods.
+ */
 public class TestClosestCinemas {
 	
 	private static String API_key = "AIzaSyAAgLaPXaGmpAC_oaJqjoFZt8A2aQfftTw";

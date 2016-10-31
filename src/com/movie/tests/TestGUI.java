@@ -8,6 +8,9 @@ import javax.swing.JFrame;
 
 import javax.swing.*;
 
+/**
+ * Tests the GUI package methods
+ */
 public class TestGUI {
 	
 	private static String API_key = "AIzaSyAAgLaPXaGmpAC_oaJqjoFZt8A2aQfftTw";

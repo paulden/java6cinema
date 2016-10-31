@@ -14,16 +14,16 @@ import com.movie.locations.Path.ModeTrajet;
 
 import org.json.JSONException;
 
+/**
+ * Tests the CinemaFinder class methods. <br>
+ * The goal is to give a user a list of possible shows.
+ */
 public class TestCinemaFinder {
 
 	
 	public TestCinemaFinder() {
 	}
 
-	/**
-	 * Tests the CinemaFinder class methods. <br>
-	 * The goal is to give a user a list of possible shows.
-	 */
 	public static void main(String[] args) {
 
 		CinemaFinder cinemaFinder = new CinemaFinder();
