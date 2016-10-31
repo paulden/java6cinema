@@ -1,17 +1,28 @@
 package com.movie.gui;
 
+import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import com.movie.cinema.CinemaFinder;
+import com.movie.cinema.Film;
+import com.movie.cinema.Seance;
 import com.movie.locations.ClosestCinemas;
+import com.movie.locations.Path;
+import com.movie.locations.Path.ModeTrajet;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -33,9 +44,19 @@ private JLabel labelResultsCinemas = new JLabel();
 private JLabel labelResultsTime = new JLabel();
 private JLabel labelResultsMovies = new JLabel();
 private JLabel labelResultsAddress = new JLabel();
-private JButton b = new JButton ("J'y vais !");
+private JButton b = new JButton ("J'y vais...");
 private JOptionPane jopWarning = new JOptionPane();
-private Slider slider = new Slider();
+private Slider sliderDistance = new Slider();
+private JFormattedTextField maxTime = new JFormattedTextField(NumberFormat.getIntegerInstance());
+private JLabel maxTimeLabel = new JLabel("Temps maximum avant le début de la séance (en minutes)");
+
+//Checkboxes to allow user select (a) travelling mode(s)-----------
+JPanel travellingModes = new JPanel();;
+Checkbox walking = new Checkbox("En marchant");
+Checkbox driving = new Checkbox("En voiture");
+Checkbox transit = new Checkbox("En transport en commun");
+Checkbox bicycling = new Checkbox("A bicylette");
+//----------------------------------------------------------------
 
 //On récupère la résolution de l'utilisateur
 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -92,12 +113,23 @@ public Fenetre(){
   gbc.gridy = 0;
   gbc.gridheight = 1;
   gbc.gridwidth = GridBagConstraints.REMAINDER;
-  slider.setBackground(Color.WHITE);
-  cell1.add(slider);
+  sliderDistance.setBackground(Color.WHITE);
+  cell1.add(sliderDistance);
   cell1.add(b);
+  travellingModes.setLayout(new GridLayout(4, 1));
+  travellingModes.add(walking);
+  travellingModes.add(driving);
+  travellingModes.add(transit);
+  travellingModes.add(bicycling);
+  cell1.add(travellingModes);
+  maxTime.setPreferredSize(new Dimension(100, 30));
+  cell1.add(maxTime);
+  cell1.add(maxTimeLabel);
   content.add(cell1, gbc);
   
-  int value = slider.getDistanceMax().getValue();
+  
+  //Tests TODO
+  int value = sliderDistance.getDistanceMax().getValue();
   System.out.println("Valeur récupérée :" + value);
  
   //Bloc réservé à l'affichage des cinémas
@@ -144,32 +176,75 @@ public Fenetre(){
 //de recherche) et d'afficher ensuite la liste des cinémas sous forme de String
 class BoutonListener implements ActionListener{
   public void actionPerformed(ActionEvent e) {
-    System.out.println("Distance saisie : " + slider.getDistanceMax().getValue() + " km");
-    int radius = slider.getDistanceMax().getValue()*1000;
-    ClosestCinemas closestCinemas = new ClosestCinemas();
+	  
+	  //Summary of user inputs in the console
+    System.out.println("Distance saisie : " + sliderDistance.getDistanceMax().getValue() + " km");
+    System.out.println("Modes de transports sélectionnés :");
+    if (walking.getState()) {
+    	System.out.println("Marche");
+    	};
+	if (driving.getState()) {
+    	System.out.println("Voiture");
+    	};
+    if (transit.getState()) {
+    	System.out.println("Transport en commun");
+    	};
+	if (bicycling.getState()) {
+    	System.out.println("Vélo");
+    	};
+    System.out.println("Temps maximum avant la séance : " + maxTime.getText() + " minutes");
+    	
+    //Getting correct data using methods defined in other packages
+    int radius = sliderDistance.getDistanceMax().getValue()*1000;
+    int time = Integer.parseInt(maxTime.getText());
+    Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
+    if (walking.getState()) {
+    	modeTrajetPossible.add(ModeTrajet.WALKING);
+    	};
+	if (driving.getState()) {
+		modeTrajetPossible.add(ModeTrajet.DRIVING);
+    	};
+    if (transit.getState()) {
+    	modeTrajetPossible.add(ModeTrajet.TRANSIT);
+    	};
+	if (bicycling.getState()) {
+		modeTrajetPossible.add(ModeTrajet.BICYCLING);
+    	};
+
+    
+	CinemaFinder cinemaFinder = new CinemaFinder();
+	
 		try {
-			closestCinemas.setClosestCinemas(radius);
+			cinemaFinder.findClosestCinemas(radius);
+			cinemaFinder.updateAllSeances();
+			cinemaFinder.printCinemaList();
 			
-			int n = closestCinemas.getClosestCinemas().size();
-			
-			//Strings results configurés en html pour les besoins de l'affichage dans la fenêtre
-			
-			/* 24/10 : les résultats affichés ne correspondent pas aux noms des blocs et fait
-			 * simplement figure de test d'affichage à l'heure actuelle
-			 */
+			cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
+			cinemaFinder.printCinemaList();
 			
 			String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
 			String resultsAddress = "<html> <h1 style ='color:blue; font-size:16;'> Adresses : </h1> <br> <br>";
 			String resultsMovies = "<html> <h1 style ='color:blue; font-size:16;'> Films : </h1> <br> <br>";
 			String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
+
 			
-			for(int i = 0; i<n;i++){
-				resultsCinemas = resultsCinemas + closestCinemas.getClosestCinemas().get(i).getNom() + "<br>";
-				resultsAddress = resultsAddress + closestCinemas.getClosestCinemas().get(i).getAdresse() + "<br>";
-				resultsMovies = resultsMovies + String.valueOf((closestCinemas.getClosestCinemas().get(i).getLat())) + "<br>";
-				resultsTime = resultsTime + String.valueOf((closestCinemas.getClosestCinemas().get(i).getLng())) + "<br>";
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, null, modeTrajetPossible);
+			for(Seance seance : bestSeanceList) {
+				System.out.println("SEANCES :");
+				System.out.println(seance);
+				resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
+				resultsAddress = resultsAddress + seance.getCinema().getAdresse() + "<br>";
+				resultsMovies = resultsMovies + seance.getFilm().getName() + "<br>";
+				resultsTime = resultsTime + seance.getDate().getTime() + "<br>";
+				
 			}
 			
+			/* Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(time, null, modeTrajetPossible);
+			for(Film film : filmSeanceListMap.values()) {
+				System.out.println("FILMS :");
+				System.out.println(film);
+			} */
+						
 			resultsCinemas = resultsCinemas + "</html>";
 			resultsAddress = resultsAddress + "</html>";
 			resultsMovies = resultsMovies + "</html>";
@@ -187,7 +262,7 @@ class BoutonListener implements ActionListener{
 			e1.printStackTrace();
 		}
   }
-  
-
 }
+
+
 }
