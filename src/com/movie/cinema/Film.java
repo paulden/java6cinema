@@ -35,10 +35,10 @@ public class Film {
 	 */
 	private List<Seance> seanceListVOSTFR;
 
-	public Film(String name, String duree, String rated) {
+	public Film(String name, String duration, String rated) {
 		super();
 		this.name = name;
-		this.duree = duree;
+		this.duree = duration;
 		this.rated = rated;
 		this.seanceListVF = new ArrayList<Seance>();
 		this.seanceListVOSTFR = new ArrayList<Seance>();
@@ -64,8 +64,8 @@ public class Film {
 		return duree;
 	}
 
-	public void setDuree(String duree) {
-		this.duree = duree;
+	public void setDuree(String duration) {
+		this.duree = duration;
 	}
 
 	public String getRated() {

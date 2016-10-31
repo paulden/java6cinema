@@ -77,10 +77,10 @@ public class CinemaFinder {
 	
 	/**
 	 * Updates the cinemaList by adding the time it takes for the user to reach the cinema, using only specified transportation modes.
-	 * @param adresseDepart : The users's location or the location he wants to start from
+	 * @param originAddress : The users's location or the location he wants to start from
 	 * @param modeTrajetPossible : A set of the transportation modes the user is willing to use to get to the cinema
 	 */
-	public void updateTempsTrajet(String adresseDepart, Set<Path.ModeTrajet> modeTrajetPossible) {
+	public void updateTempsTrajet(String originAddress, Set<Path.ModeTrajet> modeTrajetPossible) {
 		if (modeTrajetPossible == null) {
 			modeTrajetPossible = new HashSet<>();
 			Collections.addAll(modeTrajetPossible, Path.ModeTrajet.values());
@@ -88,10 +88,10 @@ public class CinemaFinder {
 		
 		
 		MyAddress myAdress;
-		if(adresseDepart==null) {
+		if(originAddress==null) {
 			myAdress = new MyAddress();
 		} else {
-			myAdress = new MyAddress(adresseDepart);
+			myAdress = new MyAddress(originAddress);
 		}
 		
 		double originLat = myAdress.getMyLat();
@@ -219,9 +219,9 @@ public class CinemaFinder {
 			boolean seanceAdded = false;
 			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
 				if(modeTrajetPossible.contains(mode)) {
-					int duree = tempsTrajetMap.get(mode);
+					int duration = tempsTrajetMap.get(mode);
 					//Si l'heure de la séance est supérieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
-					if(seanceMillisTime > departureTimeInMillis + (long) duree * 1000
+					if(seanceMillisTime > departureTimeInMillis + (long) duration * 1000
 							&&
 							seanceMillisTime <= departureTimeInMillis + millis
 							) {

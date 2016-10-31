@@ -13,7 +13,7 @@ import com.movie.locations.Path;
  */
 public class Seance {
 	
-	public enum Language {VF,VOSTFR};
+	public enum Language {VF,VOSTFR}
 	
 	private Film film;
 	private Calendar date;
@@ -25,15 +25,15 @@ public class Seance {
 	 */
 	private List<Path.ModeTrajet> modeTrajetList;
 	
-	public Seance(Film film, int heure, int minutes, Cinema cinema, Language language) {
+	public Seance(Film film, int hour, int minutes, Cinema cinema, Language language) {
 		this.film = film;
 		this.cinema = cinema;
 		this.date = Calendar.getInstance();
-		this.date.set(Calendar.HOUR_OF_DAY, heure);
+		this.date.set(Calendar.HOUR_OF_DAY, hour);
 		this.date.set(Calendar.MINUTE, minutes);
 		this.date.set(Calendar.SECOND, 0);
 		this.setLanguage(language);
-		this.modeTrajetList = new ArrayList<Path.ModeTrajet>();
+		this.modeTrajetList = new ArrayList<>();
 	}
 	
 	public Seance(Film film, Calendar date, Cinema cinema, Language language) {
