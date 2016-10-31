@@ -23,12 +23,16 @@ import org.json.JSONObject;
  */
 
 public class Path {
-	
-	private static String API_key = "AIzaSyAXKXL1u5kkztbN3LOSBOvhGPNpK2kYD5E";
-	
-	protected int value;
-	protected String readable;
-	
+
+	/**
+	 * Two attributes representing the time to go from the origin to the destination : one in milliseconds, the other one in human-readable format.
+	 */
+	private int value;
+	private String readable;
+
+	/**
+	 * The 4 possible transportation modes. "Transit" is for public transportation.
+	 */
 	public enum ModeTrajet {
 		WALKING("walking"),
 		DRIVING("driving"),
@@ -42,7 +46,7 @@ public class Path {
 		}
 		
 		/**
-		 * Permet de récupérer le mode du trajet.
+		 * Prints a transportation mode
 		 */
 		@Override
 		public String toString() {
@@ -50,9 +54,19 @@ public class Path {
 		}
 	
 	};
-	
+
+	/**
+	 * Constructs a Path object by calling the Google Maps Directions API. <br>
+	 * @param origin_lat : departure spot latitude
+	 * @param origin_lng : departure spot longitude
+	 * @param dest_lat : destination spot latitude
+	 * @param dest_lng : destination spot longitude
+	 * @param mode : chosen transportation mode
+	 * @throws IOException in case of API connection failure
+	 * @throws NoPathException if the API can't find a path fom origin to destination
+	 */
 	public Path(double origin_lat, double origin_lng, double dest_lat, double dest_lng, String mode) 
-			throws ClientProtocolException, IOException, NoPathException {
+			throws IOException, NoPathException {
 		super();
 		JSONObject queryResult = getTimeToDestination(origin_lat, origin_lng, dest_lat, dest_lng, mode);
 		this.value = queryResult.getInt("value");
@@ -69,21 +83,31 @@ public class Path {
 		return readable;
 	}
 
-
-	protected JSONObject getTimeToDestination(double origin_lat, double origin_lng, double dest_lat, double dest_lng, String mode) 
-			throws ClientProtocolException, IOException, NoPathException {
+	/**
+	 * This methods calls the Directions API to get the time from the origin to the destination.
+	 * @param origin_lat : departure spot latitude
+	 * @param origin_lng : departure spot longitude
+	 * @param dest_lat : destination spot latitude
+	 * @param dest_lng : destination spot longitude
+	 * @param mode : chosen transportation mode
+	 * @return a JSON object representing the trip duration
+	 * @throws IOException in case of API connection failure
+	 * @throws NoPathException if the API can't find a path fom origin to destination
+	 */
+	private JSONObject getTimeToDestination(double origin_lat, double origin_lng, double dest_lat, double dest_lng, String mode)
+			throws IOException, NoPathException {
 		
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		
-		String requete = generatePathRequest(origin_lat, origin_lng, dest_lat, dest_lng, mode);
+		String request = generatePathRequest(origin_lat, origin_lng, dest_lat, dest_lng, mode);
 		
 		// Sending the request 
-		HttpGet getRequest = new HttpGet(requete);
+		HttpGet getRequest = new HttpGet(request);
 		getRequest.addHeader("accept", "application/json");
 		HttpResponse res = httpClient.execute(getRequest);
 		
 		if (res.getStatusLine().getStatusCode() != 200) {
-			throw new RuntimeException("Echec: HTTP error code : " + res.getStatusLine().getStatusCode());
+			throw new RuntimeException("Failure: HTTP error code : " + res.getStatusLine().getStatusCode());
 		}
 		
 		// Handling the response
@@ -109,21 +133,31 @@ public class Path {
 		// Return usable object 
 		return duration;
 	}
-	
-	
-	protected String generatePathRequest(double origin_lat, double origin_lng, double dest_lat, double dest_lng, String mode) {
-		
-		String requete = "https://maps.googleapis.com/maps/api/directions/json?origin="
+
+	/**
+	 * Short function to generate the request string from the input data
+	 * @param origin_lat : departure spot latitude
+	 * @param origin_lng : departure spot longitude
+	 * @param dest_lat : destination spot latitude
+	 * @param dest_lng : destination spot longitude
+	 * @param mode : chosen transportation mode
+	 * @return a properly formatted request ready to be sent to the API
+	 */
+	private String generatePathRequest(double origin_lat, double origin_lng, double dest_lat, double dest_lng, String mode) {
+
+		String API_key = "AIzaSyAXKXL1u5kkztbN3LOSBOvhGPNpK2kYD5E";
+
+		String request = "https://maps.googleapis.com/maps/api/directions/json?origin="
 				+ String.valueOf(origin_lat) + "," + String.valueOf(origin_lng)
 				+ "&destination="
 				+ String.valueOf(dest_lat) + "," + String.valueOf(dest_lng);
 		
 		if(mode.equals("driving") || mode.equals("walking") || mode.equals("bicycling") || mode.equals("transit")) {
-			requete += "&mode=" + mode;
+			request += "&mode=" + mode;
 		}
 		
-		requete += "&key=" + API_key;
-		return requete;
+		request += "&key=" + API_key;
+		return request;
 		
 	}
 

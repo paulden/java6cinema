@@ -3,27 +3,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class repr�sentant un film. <br>
- * Contient le nom du film, sa durée, son "rated", le {@link Cinema} dans lequel il passe, et la liste des {@link Seance} en français et en VOSTFR.
+ * Class representing a movie.<br>
+ * Contains the movie title, its duration, its rating, the {@link Cinema} in which it is shown, and a list of {@link Seance} in french and french-subtitled version.
  * @author Kévin
  *
  */
 public class Film {
-	
+
+	/**
+	 * Movie title
+	 */
 	private String name;
-	
+
+	/**
+	 * Movie duration
+	 */
 	private String duree;
-	
+
+	/**
+	 * Movie rating
+	 */
 	private String rated;
-	
+
+	/**
+	 * A list of shows of this movie in french version
+	 */
 	private List<Seance> seanceListVF;
-	
+
+	/**
+	 * A list of shows of this movie in french-subtitled version
+	 */
 	private List<Seance> seanceListVOSTFR;
 
-	public Film(String name, String duree, String rated) {
+	public Film(String name, String duration, String rated) {
 		super();
 		this.name = name;
-		this.duree = duree;
+		this.duree = duration;
 		this.rated = rated;
 		this.seanceListVF = new ArrayList<Seance>();
 		this.seanceListVOSTFR = new ArrayList<Seance>();
@@ -49,8 +64,8 @@ public class Film {
 		return duree;
 	}
 
-	public void setDuree(String duree) {
-		this.duree = duree;
+	public void setDuree(String duration) {
+		this.duree = duration;
 	}
 
 	public String getRated() {

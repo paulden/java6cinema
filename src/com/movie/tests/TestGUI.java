@@ -8,6 +8,9 @@ import javax.swing.JFrame;
 
 import javax.swing.*;
 
+/**
+ * Tests the GUI package methods
+ */
 public class TestGUI {
 	
 	/** Test designed to display the window Fenetre built in the

@@ -1,75 +1,49 @@
 package com.movie.tests;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.movie.cinema.Cinema;
 import com.movie.cinema.CinemaFinder;
 import com.movie.cinema.Film;
 import com.movie.cinema.Seance;
-import com.movie.cinema.Seance.Language;
 import com.movie.locations.Path;
 import com.movie.locations.Path.ModeTrajet;
 
 import org.json.JSONException;
 
+/**
+ * Tests the CinemaFinder class methods. <br>
+ * The goal is to give a user a list of possible shows.
+ */
 public class TestCinemaFinder {
 
 	
 	public TestCinemaFinder() {
-		
 	}
-
-	/**
-	 * Generates a hardcoded cinemaFinder to save time during tests.
-	 * @return cinemaFinder : a hardcoded version of a simple cinema finder
-	 */
-	private static CinemaFinder generateHardCodedCinemaFinder() {
-		CinemaFinder cinemaFinder = new CinemaFinder();
-
-		List<Cinema> cinemaList = new ArrayList<>();
-		Cinema cinema = new Cinema(
-				"Le Scarron",
-				"8 Avenue Jeanne et Maurice Dolivet, Fontenay-aux-Roses",
-				48.79147520000001,
-				2.2900317
-		);
-
-		Film film = new Film(
-				"Les Sept Mercenaires",
-				"2h12mn",
-				"Classification: Tous publics"
-		);
-
-		film.addSeanceVOSTFR(
-				new Seance(film, 21, 0, cinema, Language.VF)
-		);
-		cinema.addFilm(film);
-		cinemaList.add(cinema);
-		cinemaFinder.setCinemaList(cinemaList);
-		return cinemaFinder;
-	}
-
 
 	public static void main(String[] args) {
 
 		CinemaFinder cinemaFinder = new CinemaFinder();
 		try {
+			// find the closest cinema in a 5km radius
 			cinemaFinder.findClosestCinemas(5000);
+			// update with the shows
 			cinemaFinder.updateAllSeances();
 			cinemaFinder.printCinemaList();
-			
+
+			// We choose to test the case where the user only wants to walk or use public transportation
 			Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
 			modeTrajetPossible.add(ModeTrajet.WALKING);
 			modeTrajetPossible.add(ModeTrajet.TRANSIT);
 
+			// We test the functions for a user located in Centrale
 			cinemaFinder.updateTempsTrajet("3 avenue sully prud'homme", modeTrajetPossible);
 			cinemaFinder.printCinemaList();
 
+			// Printing the shows that were found
 			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(0, null, modeTrajetPossible);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
