@@ -10,11 +10,12 @@ import javax.swing.*;
 
 public class TestGUI {
 	
-	private static String API_key = "AIzaSyAAgLaPXaGmpAC_oaJqjoFZt8A2aQfftTw";
-	public static double lat = 48.7648573;
-	public static double lng = 2.2885256;
-	public static double radius = 5000;
-	//public static ClosestCinemas closestCinemas = new ClosestCinemas();
+	/** Test designed to display the window Fenetre built in the
+	 * com.movie.gui package 
+	 * @param args
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 
 	public static void main(String[] args) throws IOException, JSONException {
 		

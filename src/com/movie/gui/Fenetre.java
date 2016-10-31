@@ -34,12 +34,18 @@ import javax.swing.JSlider;
 
 import org.json.JSONException;
  
-//Cette classe correspond à l'objet fenêtre qui sera affichée au lancement
+/** This class builds the main window where the user may enter information
+ * and get results following user's inputs rather than using the console.
+ * This class uses Swing to build a graphical user interface.
+ * @author paul
+ *
+ */
 
 public class Fenetre extends JFrame {
 	
-//private JFormattedTextField jtf = new JFormattedTextField(NumberFormat.getIntegerInstance());
-//private JLabel labelSearch = new JLabel("Je veux aller dans un ciné situé à maximum (km) :");
+/**Definition of the main parameters
+ * used in the window
+ */
 private JLabel labelResultsCinemas = new JLabel();
 private JLabel labelResultsTime = new JLabel();
 private JLabel labelResultsMovies = new JLabel();
@@ -58,20 +64,22 @@ Checkbox transit = new Checkbox("En transport en commun");
 Checkbox bicycling = new Checkbox("A bicylette");
 //----------------------------------------------------------------
 
-//On récupère la résolution de l'utilisateur
+//Getting user's resolution so that the dimension will be adapted even if resolutions are different
 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 double userWidth = screenSize.getWidth();
 double userHeight = screenSize.getHeight();
 
 public Fenetre(){
-	//Il s'agit de la fenêtre principale
+	//Main window
   this.setTitle("Recherche de séances de cinéma");
   this.setSize((int)(userWidth*0.9), (int)(userHeight*0.9));
   this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   this.setLocationRelativeTo(null);
   
-  //On construit les différents JPanels qui s'inséreront dans la fenêtre
-  //afin d'avoir une structure organisée qui affichera les données
+  /**Building the different JPanels so that the display will be organized
+   * by "blocks" which will receive data (or record inputs)
+   */
+  
   //----------------------------------------------
   
   JPanel cell1 = new JPanel();
@@ -97,18 +105,18 @@ public Fenetre(){
   
   //----------------------------------------------
   
-  //Il s'agit du conteneur principal accueillant les différents JPanels
-  //instanciés précédemment
+  //This global JPanel will receive the previous JPanels previously built and organize them 
+  //following a GridBagLayout structure
   JPanel content = new JPanel();
   content.setPreferredSize(new Dimension((int)(userWidth*0.80), (int)(userHeight*0.70)));
   content.setBackground(Color.WHITE);
   //On définit le layout manager
   content.setLayout(new GridBagLayout());
   
-  //L'objet servant à positionner les composants
+  //This objects is used to position the different components
   GridBagConstraints gbc = new GridBagConstraints();
   
-  //Composant de recherche (formulaire à remplir avec le rayon en input)
+  //Component used to record inputs (radius, travelling modes and maximum time before show starts)
   gbc.gridx = 0;
   gbc.gridy = 0;
   gbc.gridheight = 1;
@@ -126,13 +134,8 @@ public Fenetre(){
   cell1.add(maxTime);
   cell1.add(maxTimeLabel);
   content.add(cell1, gbc);
-  
-  
-  //Tests TODO
-  int value = sliderDistance.getDistanceMax().getValue();
-  System.out.println("Valeur récupérée :" + value);
  
-  //Bloc réservé à l'affichage des cinémas
+  //Block toggling cinemas
   gbc.gridx = 0;
   gbc.gridy = 1;
   gbc.gridwidth = 1;
@@ -140,7 +143,7 @@ public Fenetre(){
   cell5.add(labelResultsCinemas);
   content.add(cell5, gbc);
   
-//Bloc réservé à l'affichage des adresses des cinémas
+  //Block toggling cinemas addresses
   gbc.gridx = 1;
   gbc.gridy = 1;
   gbc.gridwidth = 1;
@@ -148,7 +151,7 @@ public Fenetre(){
   cell6.add(labelResultsAddress);
   content.add(cell6, gbc);
   
-//Bloc réservé à l'affichage des films projetés
+  //Block toggling movies
   gbc.gridx = 2;
   gbc.gridy = 1;
   gbc.gridwidth = 1;
@@ -156,7 +159,7 @@ public Fenetre(){
   cell7.add(labelResultsMovies);
   content.add(cell7, gbc);
   
-//Bloc réservé à l'affichage des horaires et/ou du temps de trajet
+  //Block toggling time of show
   gbc.gridx = 3;
   gbc.gridy = 1;
   gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -164,20 +167,23 @@ public Fenetre(){
   cell8.add(labelResultsTime);
   content.add(cell8, gbc);
 
-  //Ajout du bouton qui provient de la classe BoutonListener et qui dispose d'une
-  //méthode permettant d'écouter les inputs et afficher les résultats
-  b.addActionListener(new BoutonListener());
+  //This ButtonListener (defined below) implements a method to execute a method when the user
+  //clicks on the button. It uses inputs entered by user to display proper results
+  b.addActionListener(new ButtonListener());
   
  
   this.setContentPane(content); 
 }       
 
-//Cette classe correspond à un event listener permettant d'écouter les inputs (le rayon
-//de recherche) et d'afficher ensuite la liste des cinémas sous forme de String
-class BoutonListener implements ActionListener{
+/** This class is an event listener to record inputs entered in the first block
+ * and then display results according to what the user is looking for
+ * @author paul
+ *
+ */
+class ButtonListener implements ActionListener{
   public void actionPerformed(ActionEvent e) {
 	  
-	  //Summary of user inputs in the console
+	//Summary of user inputs in the console
     System.out.println("Distance saisie : " + sliderDistance.getDistanceMax().getValue() + " km");
     System.out.println("Modes de transports sélectionnés :");
     if (walking.getState()) {
@@ -196,7 +202,7 @@ class BoutonListener implements ActionListener{
     	
     //Getting correct data using methods defined in other packages
     int radius = sliderDistance.getDistanceMax().getValue()*1000;
-    int time = Integer.parseInt(maxTime.getText());
+    int time = Integer.parseInt(maxTime.getText()); //TODO manage exception if time == 0
     Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
     if (walking.getState()) {
     	modeTrajetPossible.add(ModeTrajet.WALKING);
@@ -211,7 +217,7 @@ class BoutonListener implements ActionListener{
 		modeTrajetPossible.add(ModeTrajet.BICYCLING);
     	};
 
-    
+    //Using CinemaFinder class to collect data and display them
 	CinemaFinder cinemaFinder = new CinemaFinder();
 	
 		try {
@@ -222,6 +228,7 @@ class BoutonListener implements ActionListener{
 			cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
 			cinemaFinder.printCinemaList();
 			
+			//For convenience, HTML is used to format text results easily
 			String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
 			String resultsAddress = "<html> <h1 style ='color:blue; font-size:16;'> Adresses : </h1> <br> <br>";
 			String resultsMovies = "<html> <h1 style ='color:blue; font-size:16;'> Films : </h1> <br> <br>";
@@ -250,13 +257,13 @@ class BoutonListener implements ActionListener{
 			resultsMovies = resultsMovies + "</html>";
 			resultsTime = resultsTime + "</html>";
 			
-			//Affichage des résultats
+			//Displaying final results
 			labelResultsCinemas.setText(resultsCinemas);
 			labelResultsAddress.setText(resultsAddress);
 			labelResultsMovies.setText(resultsMovies);
 			labelResultsTime.setText(resultsTime);
 			
-		} catch (JSONException | IOException e1) {
+		} catch (JSONException | IOException e1) { //Managing exceptions
 			System.err.println("Nous n'avons pas pu trouver de résutats correspondants à la recherche");
 			JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir", "Erreur", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
