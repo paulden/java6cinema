@@ -38,7 +38,7 @@ import org.json.JSONException;
  *
  */
 
-public class Fenetre extends JFrame {
+public class Window extends JFrame {
 	
 /**Definition of the main parameters
  * used in the window
@@ -69,7 +69,7 @@ double userHeight = screenSize.getHeight();
 /**Main constructor of our window
  * which is to be used as a final representation of the program
  */
-public Fenetre(){
+public Window(){
 	//Main window
   this.setTitle("Recherche de séances de cinéma");
   this.setSize((int)(userWidth*0.9), (int)(userHeight*0.9));
