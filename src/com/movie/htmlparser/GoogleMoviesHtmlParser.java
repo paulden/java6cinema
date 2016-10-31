@@ -25,7 +25,6 @@ public final class GoogleMoviesHtmlParser {
 	
 	/**
 	 * Static string defining if a movie's language is French
-	 * Static String déterminant dans le html si un film est en français
 	 */
 	private static String VF = "Dubbed in French";
 	
@@ -35,7 +34,7 @@ public final class GoogleMoviesHtmlParser {
 	private static String VOSTFR = "Subtitled in French";
 	
 	/**
-	 * Private constructeur.
+	 * Private constructor.
 	 */
 	private GoogleMoviesHtmlParser() {
 		
@@ -43,7 +42,6 @@ public final class GoogleMoviesHtmlParser {
 	
 	
 	/**
-	 * TODO refactor the next 3 functions to avoid code replication !
 	 * Static function getting all {@link Cinema} with their shows close to a specific place.
 	 * @param place a city or street name
 	 * @return a list of {@link Cinema} updated with their shows
@@ -168,34 +166,34 @@ public final class GoogleMoviesHtmlParser {
 	 */
 	public static void updateCinemaWithSeances(Cinema cinema) throws IOException, HtmlParserException{
 		String cinemaName = cinema.getNom();
-		String cinemaAdresse = cinema.getAdresse();
+		String cinemaAddress = cinema.getAdresse();
 		List<Cinema> cinemaList = GoogleMoviesHtmlParser.getAllCinemaWithSeances(cinemaName);
 		
 		Cinema bestCinema = null;
-		double bestCorrespondanceAdresse = 0;
+		double bestMatchingAddress = 0;
 		// For each cinema, we compare the addresses and return only the cinema with the address that matches the best
-		for (Cinema cinemaTrouve : cinemaList) {
-			String adresseTrouve = cinemaTrouve.getAdresse();
-			cinemaAdresse = cinemaAdresse.replace(",", "");
-			cinemaAdresse = adresseTrouve.replace("-", " ");
-			String[] adresseSplited = cinemaAdresse.split(" ");
-			double correspondance = 0;
-			for (String word : adresseSplited) {
-				if (adresseTrouve.contains(word)) {
-					correspondance++;
+		for (Cinema cinemaFound : cinemaList) {
+			String addressFound = cinemaFound.getAdresse();
+			cinemaAddress = cinemaAddress.replace(",", "");
+			cinemaAddress = addressFound.replace("-", " ");
+			String[] addressSplit = cinemaAddress.split(" ");
+			double matching = 0;
+			for (String word : addressSplit) {
+				if (addressFound.contains(word)) {
+					matching++;
 				}
 			}
-			correspondance/=adresseSplited.length;
-			if (correspondance>bestCorrespondanceAdresse) {
-				bestCorrespondanceAdresse = correspondance;
-				bestCinema = cinemaTrouve;
+			matching/=addressSplit.length;
+			if (matching>bestMatchingAddress) {
+				bestMatchingAddress = matching;
+				bestCinema = cinemaFound;
 			}
 		}
 		
 		if(bestCinema != null) {
-			cinema.setFilmList(bestCinema.getFilmList());;
+			cinema.setFilmList(bestCinema.getFilmList());
 		} else {
-			throw new HtmlParserException("Aucun cinéma n'a été trouvé correspondant au nom " + cinemaName + " et à l'adresse " + cinemaAdresse);
+			throw new HtmlParserException("Aucun cinéma n'a été trouvé correspondant au nom " + cinemaName + " et à l'adresse " + cinemaAddress);
 		}
 		
 	}
@@ -209,10 +207,10 @@ public final class GoogleMoviesHtmlParser {
 		// We retrieve the "desc" class element which contains the cinema description
 		Element cinemaElement = theater.getElementsByClass("desc").first();
 		String name = cinemaElement.getElementsByClass("name").first().text();
-		String adresse = cinemaElement.getElementsByClass("info").first().text();
+		String address = cinemaElement.getElementsByClass("info").first().text();
 		
 		// Create a cinema object based on the name and address
-		Cinema cinema = new Cinema(name, adresse);
+		Cinema cinema = new Cinema(name, address);
 		
 		// Get the movie list (can be empty)
 		Elements moviesList = theater.getElementsByClass("movie");
@@ -227,11 +225,11 @@ public final class GoogleMoviesHtmlParser {
 			String info = movie.getElementsByClass("info").first().text();
 			
 			String[] infoList = info.split(" - ");
-			String duree;
+			String duration;
 			if(infoList.length>=1) {
-				duree = infoList[0];
+				duration = infoList[0];
 			} else {
-				duree = "N/C";
+				duration = "N/C";
 			}
 			
 			String rated;
@@ -242,18 +240,18 @@ public final class GoogleMoviesHtmlParser {
 			}
 			
 			// If the movie name is not null we can create a Film object with gathered data.
-			if(nameMovie != null && !new String().equals(nameMovie)) {
-				Film film = new Film(nameMovie, duree, rated);
+			if(nameMovie != null && !nameMovie.isEmpty()) {
+				Film film = new Film(nameMovie, duration, rated);
 				
 				// Get HTML code about the shows
 				Element allTimeAllLanguageElement = movie.getElementsByClass("times").first();
 				String timeTextHtml = allTimeAllLanguageElement.html();
 				
 				// Split this content based on the <br> tag , separating the VF and VOSFTR shows
-				String[] timeEachLanguageSplitted = timeTextHtml.split("<br>");
+				String[] timeEachLanguageSplit = timeTextHtml.split("<br>");
 				
 				// For each language we get the show time
-				for(String timeEachLanguage : timeEachLanguageSplitted) {
+				for(String timeEachLanguage : timeEachLanguageSplit) {
 					
 					// Create an element from the HTML string
 					Element allTimeElement = Jsoup.parse(timeEachLanguage).body();
@@ -265,14 +263,14 @@ public final class GoogleMoviesHtmlParser {
 					for(Element timeElement : allTimeElement.children()) {
 						// Get the time and split it in hours/minutes
 						String time = timeElement.ownText();
-						String[] heuresEtMinutes = time.split(":");
-						int heures = Integer.valueOf(heuresEtMinutes[0]);
-						int minutes = Integer.valueOf(heuresEtMinutes[1]);
+						String[] hoursAndMinutes = time.split(":");
+						int hours = Integer.valueOf(hoursAndMinutes[0]);
+						int minutes = Integer.valueOf(hoursAndMinutes[1]);
 						//If the language is not defined or is "french", we add a VF show. Else we add a VOSTFR show.
-						if(language==null || new String().equals(language) || VF.equals(language)) {
-							film.addSeanceVF(new Seance(film, heures, minutes, cinema, Seance.Language.VF));
+						if(language==null || language.isEmpty() || VF.equals(language)) {
+							film.addSeanceVF(new Seance(film, hours, minutes, cinema, Seance.Language.VF));
 						} else {
-							film.addSeanceVOSTFR(new Seance(film, heures, minutes, cinema, Seance.Language.VOSTFR));
+							film.addSeanceVOSTFR(new Seance(film, hours, minutes, cinema, Seance.Language.VOSTFR));
 						}
 					}			
 				}	
