@@ -98,7 +98,7 @@ public class Seance {
 
 	@Override
 	public String toString() {
-		return "Seance [film=" + film.getName() + ", cinema=" + cinema.getNom() + ", modeTrajet=" + modeTrajetList + ", date=" + date.getTime() + "]";
+		return "Seance [film=" + film.getName() + ", cinema=" + cinema.getName() + ", modeTrajet=" + modeTrajetList + ", date=" + date.getTime() + "]";
 	}
 	
 	

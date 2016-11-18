@@ -200,8 +200,8 @@ public final class GoogleMoviesHtmlParser {
 	 * @throws HtmlParserException if no such cinema has been found
 	 */
 	public static void updateCinemaWithSeances(Cinema cinema) throws IOException, HtmlParserException {
-		String cinemaName = cinema.getNom();
-		String cinemaAddress = cinema.getAdresse();
+		String cinemaName = cinema.getName();
+		String cinemaAddress = cinema.getAddress();
 		
 		//List<Cinema> cinemaList = GoogleMoviesHtmlParser.getAllCinemaWithSeances(cinemaName);
 		List<Cinema> cinemaList = GoogleMoviesHtmlParser.getAllCinemaWithSeancesWithRandomHtml(cinema);
@@ -210,7 +210,7 @@ public final class GoogleMoviesHtmlParser {
 		double bestMatchingAddress = 0;
 		// For each cinema, we compare the addresses and return only the cinema with the address that matches the best
 		for (Cinema cinemaFound : cinemaList) {
-			String addressFound = cinemaFound.getAdresse();
+			String addressFound = cinemaFound.getAddress();
 			cinemaAddress = cinemaAddress.replace(",", "");
 			cinemaAddress = addressFound.replace("-", " ");
 			String[] addressSplit = cinemaAddress.split(" ");

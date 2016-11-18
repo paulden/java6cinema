@@ -164,8 +164,8 @@ class BoutonListener implements ActionListener{
 			String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
 			
 			for(int i = 0; i<n;i++){
-				resultsCinemas = resultsCinemas + closestCinemas.getClosestCinemas().get(i).getNom() + "<br>";
-				resultsAddress = resultsAddress + closestCinemas.getClosestCinemas().get(i).getAdresse() + "<br>";
+				resultsCinemas = resultsCinemas + closestCinemas.getClosestCinemas().get(i).getName() + "<br>";
+				resultsAddress = resultsAddress + closestCinemas.getClosestCinemas().get(i).getAddress() + "<br>";
 				resultsMovies = resultsMovies + String.valueOf((closestCinemas.getClosestCinemas().get(i).getLat())) + "<br>";
 				resultsTime = resultsTime + String.valueOf((closestCinemas.getClosestCinemas().get(i).getLng())) + "<br>";
 			}
