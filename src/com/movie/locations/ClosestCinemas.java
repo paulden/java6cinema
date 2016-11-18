@@ -33,14 +33,22 @@ public class ClosestCinemas {
 	// Default constructor
 	public ClosestCinemas(){}
 
-
 	/**
 	 * Build the closest cinemas list by calling Google Places API
 	 * @param radius The maximum distance the user is willing to go to
 	 * @throws IOException If there is a failure while connecting to the API
 	 * @throws JSONException If there is something unexpected in the received JSON
 	 */
-	public void setClosestCinemas(double radius) throws IOException, JSONException{
+	//Cette méthode permet de construire la liste des cinémas proches en appelant l'API Google Places
+	public void setClosestCinemas(String departureAdress, double radius) throws IOException, JSONException{
+		
+		MyAddress myAddress;
+		if(departureAdress==null) {
+			myAddress = new MyAddress();
+		} else {
+			myAddress = new MyAddress(departureAdress);
+		}
+
 		
 		double lat = myAddress.getMyLat();
 		double lng = myAddress.getMyLng();
@@ -91,6 +99,12 @@ public class ClosestCinemas {
 		
 	}
 	
+	
+	
+	public static MyAddress getMyAddress() {
+		return myAddress;
+	}
+
 	public List<Cinema> getClosestCinemas(){
 		return closestCinemas;
 	}

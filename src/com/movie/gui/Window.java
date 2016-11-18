@@ -235,12 +235,6 @@ class ButtonListener implements ActionListener{
 	CinemaFinder cinemaFinder = new CinemaFinder();
 	
 		try {
-			cinemaFinder.findClosestCinemas(radius);
-			cinemaFinder.updateAllSeances();
-			cinemaFinder.printCinemaList();
-			
-			cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
-			cinemaFinder.printCinemaList();
 			
 			//For convenience, HTML is used to format text results easily
 			String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
@@ -249,7 +243,7 @@ class ButtonListener implements ActionListener{
 			String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
 
 			
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, null, modeTrajetPossible);
+			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, radius,null,null,modeTrajetPossible,true);
 			for(Seance seance : bestSeanceList) {
 				System.out.println(seance);
 				resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
