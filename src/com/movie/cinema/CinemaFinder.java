@@ -53,9 +53,9 @@ public class CinemaFinder {
 	 * @throws IOException in case of API connection problem
 	 * @throws JSONException in case of unexpected JSON object received
 	 */
-	public void findClosestCinemas(double radius) throws JSONException, IOException {
+	public void updateClosestCinemas(String address, double radius) throws JSONException, IOException {
 		ClosestCinemas closestCinemas = new ClosestCinemas();
-		closestCinemas.setClosestCinemas(radius);
+		closestCinemas.setClosestCinemas(address, radius);
 		this.cinemaList = closestCinemas.getClosestCinemas();
 	}
 	
@@ -121,9 +121,15 @@ public class CinemaFinder {
 	 * @param modeTrajetPossible :  A set of the transportation modes the user is willing to use to get to the cinema
 	 * @return A list containing the best shows for the user
 	 */
-	public List<Seance> findBestSeances(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
-		this.bestSeanceList = new ArrayList<>();
+	public List<Seance> findBestSeances(int minutes, double radius, String departureAdress, Calendar departureTime,
+			Set<Path.ModeTrajet> modeTrajetPossible, boolean update) throws JSONException, IOException {
 		
+		if(update) {
+			this.bestSeanceList = new ArrayList<>();
+			updateClosestCinemas(departureAdress, radius);
+			updateAllSeances();
+			updateTempsTrajet(departureAdress, modeTrajetPossible);
+		}	
 		for(Cinema cinema : cinemaList) {
 			List<Film> filmCinemaList = cinema.getFilmList();
 			try {
@@ -149,8 +155,9 @@ public class CinemaFinder {
 	 * @param modeTrajetPossible :  A set of the transportation modes the user is willing to use to get to the cinema
 	 * @return A movie/shows map
 	 */
-	public Map<String, Film> findBestSeancesForEachFilm(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
-		findBestSeances(minutes, departureTime, modeTrajetPossible);
+public Map<String, Film> findBestSeancesForEachFilm(int minutes, double radius, String departureAdress,
+		Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible, boolean update) throws JSONException, IOException {
+	findBestSeances(minutes, radius, departureAdress, departureTime, modeTrajetPossible, update);
 		Map<String, Film> filmMap = new HashMap<>();
 		try {
 			for (Seance seance : bestSeanceList) {

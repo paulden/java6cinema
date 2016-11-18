@@ -246,62 +246,50 @@ class ButtonListener implements ActionListener{
 
     //Using CinemaFinder class to collect data and display them
 	CinemaFinder cinemaFinder = new CinemaFinder();
-	
-		try {
-			cinemaFinder.findClosestCinemas(radius);
-			cinemaFinder.updateAllSeances();
-			cinemaFinder.printCinemaList();
+
+	try {			
+		cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
+		cinemaFinder.printCinemaList();
+		
+		//For convenience, HTML is used to format text results easily
+		String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
+		String resultsAddress = "<html> <h1 style ='color:blue; font-size:16;'> Adresses : </h1> <br> <br>";
+		String resultsMovies = "<html> <h1 style ='color:blue; font-size:16;'> Films : </h1> <br> <br>";
+		String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
+
+		
+		List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, radius,null,null,modeTrajetPossible,true);
+		for(Seance seance : bestSeanceList) {
+			System.out.println(seance);
+			resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
+			resultsAddress = resultsAddress + seance.getCinema().getAdresse() + "<br>";
+			resultsMovies = resultsMovies + seance.getFilm().getName() + "<br>";
+			resultsTime = resultsTime + seance.getDate().getTime() + "<br>";
 			
-			if (cinemaFinder.getCinemaList().isEmpty()) {
-				
-					labelResultsMovies.setText("<html> <h1 style ='color:red; font-size:24;'> Aucun cinéma n'a été trouvé :( </h1> </html>");
-					
-			} else {
-				
-				cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
-				cinemaFinder.printCinemaList();
-				
-				//For convenience, HTML is used to format text results easily
-				String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
-				String resultsAddress = "<html> <h1 style ='color:blue; font-size:16;'> Adresses : </h1> <br> <br>";
-				String resultsMovies = "<html> <h1 style ='color:blue; font-size:16;'> Films : </h1> <br> <br>";
-				String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
-	
-				
-				List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, null, modeTrajetPossible);
-				for(Seance seance : bestSeanceList) {
-					System.out.println(seance);
-					resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
-					resultsAddress = resultsAddress + seance.getCinema().getAdresse() + "<br>";
-					resultsMovies = resultsMovies + seance.getFilm().getName() + "<br>";
-					resultsTime = resultsTime + seance.getDate().getTime() + "<br>";
-					
-				}
-				
-				/* Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(time, null, modeTrajetPossible);
-				for(Film film : filmSeanceListMap.values()) {
-					System.out.println("FILMS :");
-					System.out.println(film);
-				} */
-							
-				resultsCinemas = resultsCinemas + "</html>";
-				resultsAddress = resultsAddress + "</html>";
-				resultsMovies = resultsMovies + "</html>";
-				resultsTime = resultsTime + "</html>";
-				
-				//Displaying final results
-				labelResultsCinemas.setText(resultsCinemas);
-				labelResultsAddress.setText(resultsAddress);
-				labelResultsMovies.setText(resultsMovies);
-				labelResultsTime.setText(resultsTime);
-			
-			}
-			
-		} catch (JSONException | IOException e1) { //Managing exceptions
-			System.err.println("Erreur dans la recherche");
-			JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir", "Erreur", JOptionPane.ERROR_MESSAGE);
-			e1.printStackTrace();
 		}
+		
+		/* Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(time, null, modeTrajetPossible);
+		for(Film film : filmSeanceListMap.values()) {
+			System.out.println("FILMS :");
+			System.out.println(film);
+		} */
+					
+		resultsCinemas = resultsCinemas + "</html>";
+		resultsAddress = resultsAddress + "</html>";
+		resultsMovies = resultsMovies + "</html>";
+		resultsTime = resultsTime + "</html>";
+		
+		//Displaying final results
+		labelResultsCinemas.setText(resultsCinemas);
+		labelResultsAddress.setText(resultsAddress);
+		labelResultsMovies.setText(resultsMovies);
+		labelResultsTime.setText(resultsTime);
+						
+	} catch (JSONException | IOException e1) { //Managing exceptions
+		System.err.println("Erreur dans la recherche");
+		JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir", "Erreur", JOptionPane.ERROR_MESSAGE);
+		e1.printStackTrace();
+	}
   }
 }
 
