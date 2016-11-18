@@ -16,12 +16,12 @@ public class Cinema {
 	/**
 	 * The cinema's name.
 	 */
-	private String nom;
+	private String name;
 	
 	/**
 	 * The cinema's address (in string form)
 	 */
-	private String adresse;
+	private String address;
 
 	/**
 	 * List of movies currently being shown at the cinema
@@ -39,41 +39,62 @@ public class Cinema {
 	 */
 	private Map<Path.ModeTrajet, Integer> tempsTrajetMap;
 
-	public Cinema(String nom, String adresse) {
-		this.nom = nom;
-		this.adresse = adresse;
+	/**
+	 * Constructor with the name and the address of the cinema.
+	 * @param name The name of the cinema
+	 * @param address The address of the cinema
+	 */
+	public Cinema(String name, String address) {
+		this.name = name;
+		this.address = address;
 		filmList = new ArrayList<Film>();
 		tempsTrajetMap = new HashMap<>();
 	}
 	
-	public Cinema(String nom, String adresse, double lat, double lng) {
-		this.nom = nom;
-		this.adresse = adresse;
+	/**
+	 * Constructor with the name, the address and the gps coordinates of the cinema.
+	 * @param name The name of the cinema
+	 * @param address The address of the cinema
+	 * @param lat The latitude of the cinema
+	 * @param lng The longitude of the cinema
+	 */
+	public Cinema(String name, String address, double lat, double lng) {
+		this.name = name;
+		this.address = address;
 		this.lat = lat;
 		this.lng = lng;
 		filmList = new ArrayList<Film>();
 		tempsTrajetMap = new HashMap<>();
 	}
 	
-	public Cinema(String nom, String adresse, List<Film> filmList) {
-		super();
-		this.nom = nom;
-		this.adresse = adresse;
-		this.filmList = filmList;
-		this.lat = -1;
-		this.lng = -1;
-	}
-	
+	/**
+	 * Add a film to the list of the movies in this cinema. The cinema of all seances of this movie are set to this cinema.
+	 * @param film The film to add
+	 */
 	public void addFilm(Film film) {
+		for(Seance seance : film.getSeanceListVF()) {
+			seance.setCinema(this);
+		}
+		for(Seance seance : film.getSeanceListVOSTFR()) {
+			seance.setCinema(this);
+		}
 		filmList.add(film);
 	}
 
-	public String getNom() {
-		return nom;
+	/**
+	 * Getter for the name of the cinema.
+	 * @return The name of the cinema
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public void setNom(String nom) {
-		this.nom = nom;
+	/**
+	 * Setter of the name of the cinema
+	 * @param name The new name of the cinema
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**
@@ -100,12 +121,12 @@ public class Cinema {
 		this.lng = lng;
 	}
 
-	public String getAdresse() {
-		return adresse;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAdresse(String adresse) {
-		this.adresse = adresse;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public List<Film> getFilmList() {
@@ -136,7 +157,7 @@ public class Cinema {
 
 	@Override
 	public String toString() {
-		return "Cinema [nom=" + nom + ",adresse=" + adresse + ", lat=" + lat + ", lng=" + lng + ", tempsTrajetMap=" + tempsTrajetMap + ", filmList=" + filmList + "]";
+		return "Cinema [nom=" + name + ",adresse=" + address + ", lat=" + lat + ", lng=" + lng + ", tempsTrajetMap=" + tempsTrajetMap + ", filmList=" + filmList + "]";
 	}
 	
 	

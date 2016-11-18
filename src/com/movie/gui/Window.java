@@ -273,11 +273,12 @@ class ButtonListener implements ActionListener{
 		List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, radius,null,null,modeTrajetPossible,true);
 		for(Seance seance : bestSeanceList) {
 			System.out.println(seance);
-			resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
-			resultsAddress = resultsAddress + seance.getCinema().getAdresse() + "<br>";
+			resultsCinemas = resultsCinemas + seance.getCinema().getName() + "<br>";
+			resultsAddress = resultsAddress + seance.getCinema().getAddress() + "<br>";
 			resultsMovies = resultsMovies + seance.getFilm().getName() + "<br>";
 			resultsTime = resultsTime + seance.getDate().getTime() + "<br>";
 			
+
 		}
 		
 		/* Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(time, null, modeTrajetPossible);

@@ -68,7 +68,7 @@ public class CinemaFinder {
 			try {
 				GoogleMoviesHtmlParser.updateCinemaWithSeances(cinema);
 			} catch(HtmlParserException | IOException e) {
-				System.err.println("Le cinéma " + cinema.getNom() + " situé au \'" + cinema.getAdresse() + "\'" + " n'a pas pu être mis à jour avec les séances car : ");
+				System.err.println("Le cinéma " + cinema.getName() + " situé au \'" + cinema.getAddress() + "\'" + " n'a pas pu être mis à jour avec les séances car : ");
 				e.printStackTrace();
 				iterator.remove();
 			}
@@ -140,7 +140,7 @@ public class CinemaFinder {
 					addBestSeancesFrom(minutes, seanceVOSTFRFilmCinemaList, departureTime, modeTrajetPossible);
 				}
 			} catch (NullPointerException e) {
-				System.out.println("No movie found for the cinema " + cinema.getNom());
+				System.out.println("No movie found for the cinema " + cinema.getName());
 			}
 		}		
 		
