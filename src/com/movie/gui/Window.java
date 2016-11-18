@@ -50,7 +50,7 @@ private JLabel labelResultsAddress = new JLabel();
 private JButton b = new JButton ("C'est parti !");
 private JOptionPane jopWarning = new JOptionPane();
 private Slider sliderDistance = new Slider();
-private JFormattedTextField maxTime = new JFormattedTextField(NumberFormat.getIntegerInstance());
+private JFormattedTextField maxTime = new JFormattedTextField();
 private JLabel maxTimeLabel = new JLabel("Temps maximum avant le début de la séance (en minutes)");
 
 //Checkboxes to allow user select (a) travelling mode(s)-----------
@@ -195,7 +195,7 @@ public Window(){
  *
  */
 class ButtonListener implements ActionListener{
-  public void actionPerformed(ActionEvent e) {
+  public void actionPerformed(ActionEvent e) {	
 	  
 	//Summary of user inputs in the console
     System.out.println("Distance saisie : " + sliderDistance.getDistanceMax().getValue() + " km");
@@ -216,7 +216,19 @@ class ButtonListener implements ActionListener{
     	
     //Getting correct data using methods defined in other packages
     int radius = sliderDistance.getDistanceMax().getValue()*1000;
-    int time = Integer.parseInt(maxTime.getText());
+    
+    int time;
+    
+    //Managing case where user enters invalid/void duration
+    try {
+    	time = Integer.parseInt(maxTime.getText());
+    } catch(NumberFormatException ex) {
+    	time = 60;
+    	maxTime.setText("60");
+    	System.out.println("Durée rentrée invalide, durée automatique de 60 minutes fixée par défaut");
+
+    }
+
     Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
     if (walking.getState()) {
     	modeTrajetPossible.add(ModeTrajet.WALKING);
@@ -233,6 +245,7 @@ class ButtonListener implements ActionListener{
     	
     //Managing case where user has not selected any means of transportation
     if (!walking.getState() && !driving.getState() && !transit.getState() && !bicycling.getState()) {
+    	System.out.println("Aucun mode de transport choisi, modes de transport tous sélectionnés par défaut");
     	modeTrajetPossible.add(ModeTrajet.WALKING);
     	walking.setState(true);
     	modeTrajetPossible.add(ModeTrajet.DRIVING);
@@ -249,7 +262,6 @@ class ButtonListener implements ActionListener{
 
 	try {			
 		cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
-		cinemaFinder.printCinemaList();
 		
 		//For convenience, HTML is used to format text results easily
 		String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
@@ -280,11 +292,19 @@ class ButtonListener implements ActionListener{
 		resultsTime = resultsTime + "</html>";
 		
 		//Displaying final results
-		labelResultsCinemas.setText(resultsCinemas);
-		labelResultsAddress.setText(resultsAddress);
-		labelResultsMovies.setText(resultsMovies);
-		labelResultsTime.setText(resultsTime);
-						
+		//Managing case where no results are found		
+		if (bestSeanceList.isEmpty()) {
+			labelResultsMovies.setText("<html> <h1 style ='color:red; font-size:24;'> Aucune séance n'a été trouvée :(</h1> </html>");
+			labelResultsCinemas.setText("");
+			labelResultsAddress.setText("");
+			labelResultsTime.setText("");
+		} else {
+			labelResultsCinemas.setText(resultsCinemas);
+			labelResultsAddress.setText(resultsAddress);
+			labelResultsMovies.setText(resultsMovies);
+			labelResultsTime.setText(resultsTime);
+		}
+		
 	} catch (JSONException | IOException e1) { //Managing exceptions
 		System.err.println("Erreur dans la recherche");
 		JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir", "Erreur", JOptionPane.ERROR_MESSAGE);
