@@ -42,7 +42,14 @@ public class ClosestCinemas {
 	
 
 	//Cette méthode permet de construire la liste des cinémas proches en appelant l'API Google Places
-	public void setClosestCinemas(double radius) throws IOException, JSONException{
+	public void setClosestCinemas(String departureAdress, double radius) throws IOException, JSONException{
+		
+		MyAddress myAddress;
+		if(departureAdress==null) {
+			myAddress = new MyAddress();
+		} else {
+			myAddress = new MyAddress(departureAdress);
+		}
 		
 		lat = myAddress.getMyLat();
 		lng = myAddress.getMyLng();

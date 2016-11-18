@@ -148,7 +148,7 @@ class BoutonListener implements ActionListener{
     int radius = slider.getDistanceMax().getValue()*1000;
     ClosestCinemas closestCinemas = new ClosestCinemas();
 		try {
-			closestCinemas.setClosestCinemas(radius);
+			closestCinemas.setClosestCinemas(null, radius);
 			
 			int n = closestCinemas.getClosestCinemas().size();
 			

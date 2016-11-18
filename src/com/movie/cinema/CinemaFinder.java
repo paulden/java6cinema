@@ -47,9 +47,9 @@ public class CinemaFinder {
 	 * @throws IOException in case of API connection problem
 	 * @throws JSONException in case of unexpected JSON object recieved
 	 */
-	public void updateClosestCinemas(double radius) throws JSONException, IOException {
+	public void updateClosestCinemas(String address, double radius) throws JSONException, IOException {
 		ClosestCinemas closestCinemas = new ClosestCinemas();
-		closestCinemas.setClosestCinemas(radius);
+		closestCinemas.setClosestCinemas(address, radius);
 		this.cinemaList = closestCinemas.getClosestCinemas();
 	}
 	
@@ -111,20 +111,23 @@ public class CinemaFinder {
 	 * @throws IOException 
 	 * @throws JSONException 
 	 */
-	public List<Seance> findBestSeances(double radius, String departureAdress, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) throws JSONException, IOException {
-		this.bestSeanceList = new ArrayList<>();
-		updateClosestCinemas(radius);
-		updateAllSeances();
-		updateTempsTrajet(departureAdress, modeTrajetPossible);
+	public List<Seance> findBestSeances(int minutes, double radius, String departureAdress, Calendar departureTime,
+			Set<Path.ModeTrajet> modeTrajetPossible, boolean update) throws JSONException, IOException {
 		
+		if(update) {
+			this.bestSeanceList = new ArrayList<>();
+			updateClosestCinemas(departureAdress, radius);
+			updateAllSeances();
+			updateTempsTrajet(departureAdress, modeTrajetPossible);
+		}	
 		for(Cinema cinema : cinemaList) {
 			List<Film> filmCinemaList = cinema.getFilmList();
 			try {
 				for (Film film : filmCinemaList) {
 					List<Seance> seanceVFFilmCinemaList = film.getSeanceListVF();
 					List<Seance> seanceVOSTFRFilmCinemaList = film.getSeanceListVOSTFR();
-					addBestSeancesFrom(seanceVFFilmCinemaList, departureTime, modeTrajetPossible);
-					addBestSeancesFrom(seanceVOSTFRFilmCinemaList, departureTime, modeTrajetPossible);
+					addBestSeancesFrom(minutes, seanceVFFilmCinemaList, departureTime, modeTrajetPossible);
+					addBestSeancesFrom(minutes, seanceVOSTFRFilmCinemaList, departureTime, modeTrajetPossible);
 				}
 			} catch (NullPointerException e) {
 				System.out.println("No movie found for the cinema " + cinema.getNom());
@@ -134,8 +137,10 @@ public class CinemaFinder {
 		return this.bestSeanceList;
 	}
 	
-	public Map<String, Film> findBestSeancesForEachFilm(double radius, String departureAdress, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) throws JSONException, IOException {
-		findBestSeances(radius, departureAdress, departureTime, modeTrajetPossible);
+
+	public Map<String, Film> findBestSeancesForEachFilm(int minutes, double radius, String departureAdress,
+			Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible, boolean update) throws JSONException, IOException {
+		findBestSeances(minutes, radius, departureAdress, departureTime, modeTrajetPossible, update);
 		Map<String, Film> filmMap = new HashMap<>();
 		try {
 			for (Seance seance : bestSeanceList) {
@@ -161,29 +166,15 @@ public class CinemaFinder {
 		return filmMap;
 	}
 
-	/**
-	 * Get a list of seances the user has time to go to, within the amount of time he specified.
-	 * @param minutes the maximum time wanted by the user before a seance starts
-	 * @return seanceList a list of all the seances the user can go to in the amount of time he specified
-	 */
-	public List<Seance> findSeancesWithTimeConstraint(int minutes, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
-		List<Seance> targetSeances = findBestSeances(departureTime, modeTrajetPossible);
+
+	
+	private void addBestSeancesFrom(int minutes, List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		int millis = minutes * 60000;
 
-		for (Iterator<Seance> iterator = targetSeances.iterator(); iterator.hasNext(); ) {
-			Seance seance = iterator.next();
-			if (seance.getDate().getTimeInMillis() > Calendar.getInstance().getTimeInMillis() + millis) {
-				iterator.remove();
-			}
-		}
-
-		return targetSeances;
-	}
-	
-	private void addBestSeancesFrom(List<Seance> seanceList, Calendar departureTime, Set<Path.ModeTrajet> modeTrajetPossible) {
 		if (departureTime==null) {
 			departureTime = Calendar.getInstance();
 		}
+		long departureTimeInMillis = departureTime.getTimeInMillis();
 		
 		if (modeTrajetPossible==null) {
 			modeTrajetPossible = new HashSet<>();
@@ -198,13 +189,18 @@ public class CinemaFinder {
 		while(!allSeanceAdded && it.hasNext()) {
 			Seance seance = it.next();
 			Calendar seanceTime = seance.getDate();
+			long seanceMillisTime = seanceTime.getTimeInMillis();
+
 			Map<Path.ModeTrajet, Integer> tempsTrajetMap = seance.getCinema().getTempsTrajetMap();
 			boolean seanceAdded = false;
 			for (Path.ModeTrajet mode : tempsTrajetMap.keySet()) {
 				if(modeTrajetPossible.contains(mode)) {
 					int duree = tempsTrajetMap.get(mode);
 					//Si l'heure de la séance est supérieur à l'heure du depart plus la durée du trajet, alors on ajoute cette séance.
-					if(seanceTime.getTimeInMillis() > departureTime.getTimeInMillis() + (long) duree * 1000) {
+					if(seanceMillisTime > departureTimeInMillis + (long) duree * 1000
+							&&
+							seanceMillisTime <= departureTimeInMillis + millis
+							) {
 						seance.getModeTrajetList().add(mode);
 						if (!seanceAdded) {
 							bestSeanceList.add(seance);

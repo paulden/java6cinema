@@ -15,7 +15,7 @@ public class TestClosestCinemas {
 
 	public static void main(String[] args) throws IOException, JSONException {
 
-		closestCinemas.setClosestCinemas(10000);
+		closestCinemas.setClosestCinemas(null, 10000);
 		
 		int n = closestCinemas.getClosestCinemas().size();
 		
