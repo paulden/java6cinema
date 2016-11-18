@@ -223,8 +223,8 @@ class ButtonListener implements ActionListener{
     try {
     	time = Integer.parseInt(maxTime.getText());
     } catch(NumberFormatException ex) {
-    	time = 600;
-    	maxTime.setText("600");
+    	time = 60;
+    	maxTime.setText("60");
     	System.out.println("Durée rentrée invalide, durée automatique de 60 minutes fixée par défaut");
 
     }
