@@ -230,6 +230,16 @@ class ButtonListener implements ActionListener{
 	if (bicycling.getState()) {
 		modeTrajetPossible.add(ModeTrajet.BICYCLING);
     	};
+    if (!walking.getState() && !driving.getState() && !transit.getState() && !bicycling.getState()) {
+    	modeTrajetPossible.add(ModeTrajet.WALKING);
+    	walking.setState(true);
+    	modeTrajetPossible.add(ModeTrajet.DRIVING);
+    	driving.setState(true);
+    	modeTrajetPossible.add(ModeTrajet.TRANSIT);
+    	transit.setState(true);
+    	modeTrajetPossible.add(ModeTrajet.BICYCLING);
+    	bicycling.setState(true);
+    }
 
     //Using CinemaFinder class to collect data and display them
 	CinemaFinder cinemaFinder = new CinemaFinder();
