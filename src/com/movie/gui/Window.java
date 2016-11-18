@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -275,8 +276,28 @@ class ButtonListener implements ActionListener{
 			System.out.println(seance);
 			resultsCinemas = resultsCinemas + seance.getCinema().getName() + "<br>";
 			resultsAddress = resultsAddress + seance.getCinema().getAddress() + "<br>";
-			resultsMovies = resultsMovies + seance.getFilm().getName() + "<br>";
-			resultsTime = resultsTime + seance.getDate().getTime() + "<br>";
+			resultsMovies = resultsMovies + seance.getFilm().getName() + " - " + seance.getLanguage() + "<br>";
+			String hour = String.valueOf(seance.getDate().get(Calendar.HOUR_OF_DAY));
+			String minute;
+			if (seance.getDate().get(Calendar.MINUTE) < 10) {
+				minute = "0" + String.valueOf(seance.getDate().get(Calendar.MINUTE));
+			} else {
+				minute = String.valueOf(seance.getDate().get(Calendar.MINUTE));
+			}
+			resultsTime = resultsTime + hour + "h" + minute + " (";
+			if (seance.getModeTrajetList().contains(ModeTrajet.WALKING)){
+				resultsTime = resultsTime + "à pied ";
+			}
+			if (seance.getModeTrajetList().contains(ModeTrajet.BICYCLING)){
+				resultsTime = resultsTime + "à vélo ";
+			}
+			if (seance.getModeTrajetList().contains(ModeTrajet.DRIVING)){
+				resultsTime = resultsTime + "en voiture ";
+			}
+			if (seance.getModeTrajetList().contains(ModeTrajet.TRANSIT)){
+				resultsTime = resultsTime + "en transports ";
+			}
+			resultsTime = resultsTime + ") <br>";
 			
 
 		}
