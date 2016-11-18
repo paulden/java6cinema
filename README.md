@@ -18,15 +18,20 @@ First ensure you have the appropriate version of Java. Then you need to have Mav
 The build process is then pretty straightforward.
 
 First clone the git repository :
-> git clone https://github.com/paulden/java6cinema.git
-
+```
+git clone https://github.com/paulden/java6cinema.git
+```
 Then get into the "java6cinema" directory and run :
-> mvn package
+```     
+mvn package
+```
 
 This creates an executable .jar file with all dependencies.
 It is located in the "target" directory and is named java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 You can now run this .jar file like any other : for example if you like command line, you can use 
-> java -jar target/java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+```
+java -jar target/java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+```
 
 # Testing 
 
