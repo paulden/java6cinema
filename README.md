@@ -28,6 +28,7 @@ mvn package
 
 This creates an executable .jar file with all dependencies.
 It is located in the "target" directory and is named java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+
 You can now run this .jar file like any other : for example if you like command line, you can use 
 ```
 java -jar target/java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar
