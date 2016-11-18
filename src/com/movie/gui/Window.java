@@ -216,7 +216,7 @@ class ButtonListener implements ActionListener{
     	
     //Getting correct data using methods defined in other packages
     int radius = sliderDistance.getDistanceMax().getValue()*1000;
-    int time = Integer.parseInt(maxTime.getText()); //TODO manage exception if time == 0
+    int time = Integer.parseInt(maxTime.getText());
     Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
     if (walking.getState()) {
     	modeTrajetPossible.add(ModeTrajet.WALKING);
@@ -230,51 +230,66 @@ class ButtonListener implements ActionListener{
 	if (bicycling.getState()) {
 		modeTrajetPossible.add(ModeTrajet.BICYCLING);
     	};
+    	
+    //Managing case where user has not selected any means of transportation
+    if (!walking.getState() && !driving.getState() && !transit.getState() && !bicycling.getState()) {
+    	modeTrajetPossible.add(ModeTrajet.WALKING);
+    	walking.setState(true);
+    	modeTrajetPossible.add(ModeTrajet.DRIVING);
+    	driving.setState(true);
+    	modeTrajetPossible.add(ModeTrajet.TRANSIT);
+    	transit.setState(true);
+    	modeTrajetPossible.add(ModeTrajet.BICYCLING);
+    	bicycling.setState(true);
+    }
+    
 
     //Using CinemaFinder class to collect data and display them
 	CinemaFinder cinemaFinder = new CinemaFinder();
-	
-		try {
-			
-			//For convenience, HTML is used to format text results easily
-			String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
-			String resultsAddress = "<html> <h1 style ='color:blue; font-size:16;'> Adresses : </h1> <br> <br>";
-			String resultsMovies = "<html> <h1 style ='color:blue; font-size:16;'> Films : </h1> <br> <br>";
-			String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
 
+	try {			
+		cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
+		cinemaFinder.printCinemaList();
+		
+		//For convenience, HTML is used to format text results easily
+		String resultsCinemas = "<html> <h1 style ='color:blue; font-size:16;'> Cinémas correspondants : </h1><br> <br>";
+		String resultsAddress = "<html> <h1 style ='color:blue; font-size:16;'> Adresses : </h1> <br> <br>";
+		String resultsMovies = "<html> <h1 style ='color:blue; font-size:16;'> Films : </h1> <br> <br>";
+		String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
+
+		
+		List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, radius,null,null,modeTrajetPossible,true);
+		for(Seance seance : bestSeanceList) {
+			System.out.println(seance);
+			resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
+			resultsAddress = resultsAddress + seance.getCinema().getAdresse() + "<br>";
+			resultsMovies = resultsMovies + seance.getFilm().getName() + "<br>";
+			resultsTime = resultsTime + seance.getDate().getTime() + "<br>";
 			
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, radius,null,null,modeTrajetPossible,true);
-			for(Seance seance : bestSeanceList) {
-				System.out.println(seance);
-				resultsCinemas = resultsCinemas + seance.getCinema().getNom() + "<br>";
-				resultsAddress = resultsAddress + seance.getCinema().getAdresse() + "<br>";
-				resultsMovies = resultsMovies + seance.getFilm().getName() + "<br>";
-				resultsTime = resultsTime + seance.getDate().getTime() + "<br>";
-				
-			}
-			
-			/* Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(time, null, modeTrajetPossible);
-			for(Film film : filmSeanceListMap.values()) {
-				System.out.println("FILMS :");
-				System.out.println(film);
-			} */
-						
-			resultsCinemas = resultsCinemas + "</html>";
-			resultsAddress = resultsAddress + "</html>";
-			resultsMovies = resultsMovies + "</html>";
-			resultsTime = resultsTime + "</html>";
-			
-			//Displaying final results
-			labelResultsCinemas.setText(resultsCinemas);
-			labelResultsAddress.setText(resultsAddress);
-			labelResultsMovies.setText(resultsMovies);
-			labelResultsTime.setText(resultsTime);
-			
-		} catch (JSONException | IOException e1) { //Managing exceptions
-			System.err.println("Nous n'avons pas pu trouver de résutats correspondants à la recherche");
-			JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir", "Erreur", JOptionPane.ERROR_MESSAGE);
-			e1.printStackTrace();
 		}
+		
+		/* Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(time, null, modeTrajetPossible);
+		for(Film film : filmSeanceListMap.values()) {
+			System.out.println("FILMS :");
+			System.out.println(film);
+		} */
+					
+		resultsCinemas = resultsCinemas + "</html>";
+		resultsAddress = resultsAddress + "</html>";
+		resultsMovies = resultsMovies + "</html>";
+		resultsTime = resultsTime + "</html>";
+		
+		//Displaying final results
+		labelResultsCinemas.setText(resultsCinemas);
+		labelResultsAddress.setText(resultsAddress);
+		labelResultsMovies.setText(resultsMovies);
+		labelResultsTime.setText(resultsTime);
+						
+	} catch (JSONException | IOException e1) { //Managing exceptions
+		System.err.println("Erreur dans la recherche");
+		JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir", "Erreur", JOptionPane.ERROR_MESSAGE);
+		e1.printStackTrace();
+	}
   }
 }
 
