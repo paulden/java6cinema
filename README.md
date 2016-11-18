@@ -6,6 +6,7 @@ This repository hosts a student Java project, by the group n°6 in the advanced 
 
 This app uses several Google Maps APIs and HTML Parsing of google movies service to help a bored user. 
 From the user's location the app can give him a list of movies being shown in the nearby cinemas.
+
 **Update :** Google movies has ended their service right before the end of our project. We had to make a quick fix and now we generate our own HTML. 
 
 ## Language version
@@ -27,7 +28,7 @@ mvn package
 ```
 
 This creates an executable .jar file with all dependencies.
-It is located in the "target" directory and is named java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+It is located in the "target" directory and is named "java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar" or something close to it. 
 
 You can now run this .jar file like any other : for example if you like command line, you can use 
 ```
