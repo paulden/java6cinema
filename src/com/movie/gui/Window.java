@@ -277,6 +277,8 @@ class ButtonListener implements ActionListener{
 			resultsCinemas = resultsCinemas + seance.getCinema().getName() + "<br>";
 			resultsAddress = resultsAddress + seance.getCinema().getAddress() + "<br>";
 			resultsMovies = resultsMovies + seance.getFilm().getName() + " - " + seance.getLanguage() + "<br>";
+			
+			//Formatting hour and displaying means of transportation in Time column
 			String hour = String.valueOf(seance.getDate().get(Calendar.HOUR_OF_DAY));
 			String minute;
 			if (seance.getDate().get(Calendar.MINUTE) < 10) {
@@ -302,12 +304,6 @@ class ButtonListener implements ActionListener{
 
 		}
 		
-		/* Map<String, Film> filmSeanceListMap = cinemaFinder.findBestSeancesForEachFilm(time, null, modeTrajetPossible);
-		for(Film film : filmSeanceListMap.values()) {
-			System.out.println("FILMS :");
-			System.out.println(film);
-		} */
-					
 		resultsCinemas = resultsCinemas + "</html>";
 		resultsAddress = resultsAddress + "</html>";
 		resultsMovies = resultsMovies + "</html>";
@@ -316,8 +312,10 @@ class ButtonListener implements ActionListener{
 		//Displaying final results
 		//Managing case where no results are found		
 		if (bestSeanceList.isEmpty()) {
-			labelResultsMovies.setText("<html> <h1 style ='color:red; font-size:24;'> Aucune séance n'a été trouvée :(</h1> </html>");
-			labelResultsCinemas.setText("");
+			labelResultsCinemas.setText("<html> <h1 style ='color:red; font-size:24;'> Aucune séance n'a été trouvée :(</h1> <br> "
+					+ "<h2 style ='color:red; font-size:18;'> Avez-vous essayé de chercher dans un peu plus longtemps ? </h2> "
+					+ "<h2 style ='color:red; font-size:18;'> Ou peut-être utiliser d'autres modes de transport ? </h2> </html>");
+			labelResultsMovies.setText("");
 			labelResultsAddress.setText("");
 			labelResultsTime.setText("");
 		} else {
@@ -329,7 +327,7 @@ class ButtonListener implements ActionListener{
 		
 	} catch (JSONException | IOException e1) { //Managing exceptions
 		System.err.println("Erreur dans la recherche");
-		JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir", "Erreur", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, "La recherche n'a pas pu aboutir \nAvez-vous vérifié votre connexion Internet ?", "Oups, erreur...", JOptionPane.ERROR_MESSAGE);
 		e1.printStackTrace();
 	}
   }
