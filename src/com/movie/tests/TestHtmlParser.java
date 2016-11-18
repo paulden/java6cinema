@@ -3,14 +3,11 @@ import com.movie.cinema.Cinema;
 import com.movie.htmlparser.GoogleMoviesHtmlParser;
 
 /**
- * Class contenant un main pour tester le {@link GoogleMoviesHtmlParser}.
+ * Tests the {@link GoogleMoviesHtmlParser} class methods.
  * @author Kévin
  *
  */
 public class TestHtmlParser {
-	
-	public static String VF = "Dubbed in French";
-	public static String VOSTFR = "Subtitled in French";
 	
 	public static void main(String[] args) {
 		try {

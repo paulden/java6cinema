@@ -7,36 +7,38 @@ import java.util.Map;
 import com.movie.locations.Path;
 
 /**
- * Class représentant un cinéma.
- * La classe contient son nom, son adresse et la liste des films y passant.
+ * Class representing a movie theater.
+ * It contains its name, its address (and latitude/longitude), and a list of movies being shown.
  * @author Kévin
- *
  */
 public class Cinema {
 	
 	/**
-	 * Le nom du cinéma.
+	 * The cinema's name.
 	 */
 	private String nom;
 	
 	/**
-	 * L'adresse du cinéma.
+	 * The cinema's address (in string form)
 	 */
 	private String adresse;
 
 	/**
-	 * La liste des films passant dans ce cinéma.
+	 * List of movies currently being shown at the cinema
 	 */
 	private List<Film> filmList;
-	
+
+	/**
+	 * The cinema's GPS coordinates
+	 */
 	private double lat;
 	private double lng;
 	
 	/**
-	 * Une map associant à un mode de trajet, un temps de trajet en seconde.
+	 * A map associating a transportation mode with the time it takes to reach the cinema using this mode (time in seconds)
 	 */
 	private Map<Path.ModeTrajet, Integer> tempsTrajetMap;
-	
+
 	public Cinema(String nom, String adresse) {
 		this.nom = nom;
 		this.adresse = adresse;
@@ -75,8 +77,8 @@ public class Cinema {
 	}
 	
 	/**
-	 * Getter de la latitude.
-	 * @return La latitude : vaut -1 si la latitude n'est pas set.
+	 * Latitude getter
+	 * @return cinema's latitude or -1 if the latitude hasn't been set.
 	 */
 	public double getLat(){
 		return lat;
@@ -87,8 +89,8 @@ public class Cinema {
 	}
 	
 	/**
-	 * Getter de la longitude. 
-	 * @return La longitude. Vaut -1 si la longitude n'est pas set.
+	 * Longitude getter
+	 * @return cinema's longitude or -1 if the longitude hasn't been set.
 	 */
 	public double getLng(){
 		return lng;

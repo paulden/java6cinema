@@ -15,32 +15,30 @@ import org.json.JSONObject;
 
 import com.movie.cinema.Cinema;
 
-/* Cette classe permet d'obtenir les cinémas les plus proches sous forme
-d'une collection List d'objets Cinema(nom, adresse, lat, lng) pouvant être
-utilisés dans la recherche de cinémas proches et d'itinéraires
-
-Elle demande en input un rayon radius en mètres */
+/**
+ * This class gathers the cinemas that are closest to the user in a {@link Cinema} list.<br>
+ * They can be used in search of close cinemas or paths.
+ */
 
 public class ClosestCinemas {
 	
-	//On initialise un objet myAddress qui sera utilisé pour localiser l'utilisateur
-	//et récupérer une liste de cinémas proche de sa position
-	public static MyAddress myAddress = new MyAddress();
-	public static double lat;
-	public static double lng;
-	
-	//Il s'agit de la clé API Google Developer utilisé dans le programme
-	public static String API_key = "AIzaSyAAgLaPXaGmpAC_oaJqjoFZt8A2aQfftTw";
+	/**
+	 *  Initialize a MyAddress object that will be used to represent the user's position <br>
+	 *  and get a list of cinemas close to him.
+	 */
+	private static MyAddress myAddress = new MyAddress();
+
 	private List<Cinema> closestCinemas;
 	
-	//Constructeur par défaut
+	// Default constructor
 	public ClosestCinemas(){}
-	
-	public ClosestCinemas(List<Cinema> closestCinemas) {
-		this.closestCinemas = closestCinemas;
-	}
-	
 
+	/**
+	 * Build the closest cinemas list by calling Google Places API
+	 * @param radius The maximum distance the user is willing to go to
+	 * @throws IOException If there is a failure while connecting to the API
+	 * @throws JSONException If there is something unexpected in the received JSON
+	 */
 	//Cette méthode permet de construire la liste des cinémas proches en appelant l'API Google Places
 	public void setClosestCinemas(String departureAdress, double radius) throws IOException, JSONException{
 		
@@ -50,57 +48,63 @@ public class ClosestCinemas {
 		} else {
 			myAddress = new MyAddress(departureAdress);
 		}
+
 		
-		lat = myAddress.getMyLat();
-		lng = myAddress.getMyLng();
+		double lat = myAddress.getMyLat();
+		double lng = myAddress.getMyLng();
+		String API_key = "AIzaSyAAgLaPXaGmpAC_oaJqjoFZt8A2aQfftTw";
 		
-		//Requête à l'API Google Places avec en input la localisation (obtenue précédemment),
-		//le rayon et la clé API définie au départ
+		// Build the API request with the user's location, the radius and the API Key.
 		HttpClient httpClient = HttpClientBuilder.create().build();
-		String requete = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
+		String request = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
 				+ String.valueOf(lat) + "," + String.valueOf(lng) + "&radius=" + String.valueOf(radius)
 				+ "&types=movie_theater&key=" + API_key;		
-		HttpGet getRequest = new HttpGet(requete);		
+		HttpGet getRequest = new HttpGet(request);
 		getRequest.addHeader("accept", "application/json");		
 		HttpResponse res = httpClient.execute(getRequest);
 		
 		if (res.getStatusLine().getStatusCode() != 200) {
-			throw new RuntimeException("Echec: HTTP err code : " + res.getStatusLine().getStatusCode());
+			throw new RuntimeException("Failure: HTTP err code: " + res.getStatusLine().getStatusCode());
 			}
 		
-		//Traitement du fichier JSON obtenu en réponse
+		// Handling the JSON response
 		String responseString = new BasicResponseHandler().handleResponse(res);		
 		JSONObject obj = new JSONObject(responseString);		
-		JSONArray resultats = obj.getJSONArray("results");
+		JSONArray results = obj.getJSONArray("results");
 		
-		//On initialise une List qui recevra les cinémas récupérés
-		List<Cinema> list = new ArrayList<Cinema>();
+		// The Cinema List to receive the retrieved cinemas
+		List<Cinema> list = new ArrayList<>();
 		
-		//Récupération de tous les cinémas présents dans le fichier JSON
-		for (int i=0;i<resultats.length();++i) {
+		// Retrieval of all the cinemas found into the JSON response
+		for (int i=0;i<results.length();++i) {
 							
-			JSONObject obj2 = resultats.getJSONObject(i);
-			String name = resultats.getJSONObject(i).getString("name");
-			String adresse = resultats.getJSONObject(i).getString("vicinity");
+			JSONObject obj2 = results.getJSONObject(i);
+			String name = results.getJSONObject(i).getString("name");
+			String address = results.getJSONObject(i).getString("vicinity");
 			JSONObject geometry = obj2.getJSONObject("geometry");
 			JSONObject location = geometry.getJSONObject("location");
-			double lat = location.getDouble("lat");
-			double lng = location.getDouble("lng");
+			double latitude = location.getDouble("lat");
+			double longitude = location.getDouble("lng");
 			
-			//Les cinémas sont sous forme d'objets Cinema(name, adresse, lat, lng)
-			//pour pouvoir utiliser les get associés
-			Cinema newCinema = new Cinema(name, adresse, lat, lng);
+			// We create the Cinema objects
+			Cinema newCinema = new Cinema(name, address, latitude, longitude);
 			
 			list.add(newCinema);
 			
 			}
 		
-		//Récupération finale de la liste
+		// Finally setting the list
 		this.closestCinemas = list;
 		
 		
 	}
 	
+	
+	
+	public static MyAddress getMyAddress() {
+		return myAddress;
+	}
+
 	public List<Cinema> getClosestCinemas(){
 		return closestCinemas;
 	}

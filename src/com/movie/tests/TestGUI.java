@@ -1,26 +1,23 @@
 package com.movie.tests;
 
-import com.movie.gui.Fenetre;
+import com.movie.gui.Window;
 import java.io.IOException; 
 import org.json.JSONException;
-import org.json.JSONObject;
-import javax.swing.JFrame;
 
-import javax.swing.*;
-
+/**
+ * Tests the GUI package methods
+ */
 public class TestGUI {
 	
-	private static String API_key = "AIzaSyAAgLaPXaGmpAC_oaJqjoFZt8A2aQfftTw";
-	public static double lat = 48.7648573;
-	public static double lng = 2.2885256;
-	public static double radius = 5000;
-	//public static ClosestCinemas closestCinemas = new ClosestCinemas();
+	/** Test designed to display the window Window built in the
+	 * com.movie.gui package
+	 */
 
-	public static void main(String[] args) throws IOException, JSONException {
-		
-		Fenetre fenetre = new Fenetre();
-	    
-		fenetre.setVisible(true);
+	public static void main(String[] args) {
+
+		Window window = new Window();
+
+		window.setVisible(true);
 
 	}
 

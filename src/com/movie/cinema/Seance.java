@@ -6,14 +6,14 @@ import java.util.List;
 import com.movie.locations.Path;
 
 /**
- * Class représentant une séance de cinéma.<br>
- * Contient le {@link Film} associé, la date à laquelle passe le film et le {@link Cinema} où se déroule la séance.
+ * Class representing a film show.<br>
+ * Contains the {@link Film}, the showtime and the {@link Cinema} where the movie is shown.
  * @author Kévin
  *
  */
 public class Seance {
 	
-	public enum Language {VF,VOSTFR};
+	public enum Language {VF,VOSTFR}
 	
 	private Film film;
 	private Calendar date;
@@ -21,19 +21,19 @@ public class Seance {
 	private Language language;
 	
 	/**
-	 * Le mode de trajet pour arriver à l'heure à cette séance.
+	 * Transportation mode the user can use to get to the show in time.
 	 */
 	private List<Path.ModeTrajet> modeTrajetList;
 	
-	public Seance(Film film, int heure, int minutes, Cinema cinema, Language language) {
+	public Seance(Film film, int hour, int minutes, Cinema cinema, Language language) {
 		this.film = film;
 		this.cinema = cinema;
 		this.date = Calendar.getInstance();
-		this.date.set(Calendar.HOUR_OF_DAY, heure);
+		this.date.set(Calendar.HOUR_OF_DAY, hour);
 		this.date.set(Calendar.MINUTE, minutes);
 		this.date.set(Calendar.SECOND, 0);
 		this.setLanguage(language);
-		this.modeTrajetList = new ArrayList<Path.ModeTrajet>();
+		this.modeTrajetList = new ArrayList<>();
 	}
 	
 	public Seance(Film film, Calendar date, Cinema cinema, Language language) {
