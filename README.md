@@ -2,17 +2,17 @@
 
 This repository hosts a student Java project, by the group n°6 in the advanced programming class. 
 
-# Application 
+## Application 
 
 This app uses several Google Maps APIs and HTML Parsing of google movies service to help a bored user. 
 From the user's location the app can give him a list of movies being shown in the nearby cinemas.
 **Update :** Google movies has ended their service right before the end of our project. We had to make a quick fix and now we generate our own HTML. 
 
-# Language version
+## Language version
 
 This project uses Java 8 and Maven dependencies.
 
-# Build
+## Build
 
 First ensure you have the appropriate version of Java. Then you need to have Maven installed on your computer to quickly generate the jar file.
 The build process is then pretty straightforward.
@@ -33,7 +33,7 @@ You can now run this .jar file like any other : for example if you like command 
 java -jar target/java6cinema-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 ```
 
-# Testing 
+## Testing 
 
 The "tests" package contains a couple of test classes to test the different parts of the app.
 - TestClosestCinemas gets the closest cinemas in a 10km radius
@@ -42,7 +42,7 @@ The "tests" package contains a couple of test classes to test the different part
 - TestCinemaFinder is a more global program that tests the program's ability to suggest a close cinema
 - TestGUI was meant to test the graphical interface but has actually become the main method. 
 
-# Authors
+## Authors
 
 - Renaud Dahl - renaud.dahl@student.ecp.fr
 - Paul De Nonancourt - paul.de-nonancourt@student.ecp.fr
