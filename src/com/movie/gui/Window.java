@@ -216,7 +216,7 @@ class ButtonListener implements ActionListener{
     	
     //Getting correct data using methods defined in other packages
     int radius = sliderDistance.getDistanceMax().getValue()*1000;
-    int time = Integer.parseInt(maxTime.getText()); //TODO manage exception if time == 0
+    int time = Integer.parseInt(maxTime.getText());
     Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
     if (walking.getState()) {
     	modeTrajetPossible.add(ModeTrajet.WALKING);
@@ -230,6 +230,8 @@ class ButtonListener implements ActionListener{
 	if (bicycling.getState()) {
 		modeTrajetPossible.add(ModeTrajet.BICYCLING);
     	};
+    	
+    //Managing case where user has not selected any means of transportation
     if (!walking.getState() && !driving.getState() && !transit.getState() && !bicycling.getState()) {
     	modeTrajetPossible.add(ModeTrajet.WALKING);
     	walking.setState(true);
@@ -240,6 +242,7 @@ class ButtonListener implements ActionListener{
     	modeTrajetPossible.add(ModeTrajet.BICYCLING);
     	bicycling.setState(true);
     }
+    
 
     //Using CinemaFinder class to collect data and display them
 	CinemaFinder cinemaFinder = new CinemaFinder();
