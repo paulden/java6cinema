@@ -287,17 +287,25 @@ class ButtonListener implements ActionListener{
 				minute = String.valueOf(seance.getDate().get(Calendar.MINUTE));
 			}
 			resultsTime = resultsTime + hour + "h" + minute + " (";
+            boolean transportAdded = false;
+
 			if (seance.getModeTrajetList().contains(ModeTrajet.WALKING)){
-				resultsTime = resultsTime + "à pied ";
+				resultsTime = resultsTime + "à pied";
+                transportAdded = true;
 			}
 			if (seance.getModeTrajetList().contains(ModeTrajet.BICYCLING)){
-				resultsTime = resultsTime + "à vélo ";
+                if (transportAdded) resultsTime += ", ou ";
+				resultsTime = resultsTime + "à vélo";
+                transportAdded = true;
 			}
 			if (seance.getModeTrajetList().contains(ModeTrajet.DRIVING)){
-				resultsTime = resultsTime + "en voiture ";
+                if (transportAdded) resultsTime += ", ou ";
+				resultsTime = resultsTime + "en voiture";
+                transportAdded = true;
 			}
 			if (seance.getModeTrajetList().contains(ModeTrajet.TRANSIT)){
-				resultsTime = resultsTime + "en transports ";
+                if (transportAdded) resultsTime += ", ou ";
+				resultsTime = resultsTime + "en transports";
 			}
 			resultsTime = resultsTime + ") <br>";
 			
