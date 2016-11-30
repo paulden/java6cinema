@@ -22,7 +22,11 @@ First clone the git repository :
 ```
 git clone https://github.com/paulden/java6cinema.git
 ```
-Then get into the "java6cinema" directory and run :
+Then go into the "java6cinema" directory : 
+```     
+cd java6cinema/
+```     
+and run :
 ```     
 mvn package
 ```
