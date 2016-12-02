@@ -9,6 +9,7 @@ import com.movie.htmlparser.GoogleMoviesHtmlParser;
 import com.movie.locations.ClosestCinemas;
 import com.movie.locations.MyAddress;
 import com.movie.locations.Path;
+
 import org.json.JSONException;
 
 
@@ -126,9 +127,16 @@ public class CinemaFinder {
 		
 		if(update) {
 			this.bestSeanceList = new ArrayList<>();
+			long time1 = System.currentTimeMillis();
 			updateClosestCinemas(departureAdress, radius);
+			long time2 = System.currentTimeMillis();
+			System.out.println("Temps update closest cinema : " + String.valueOf(time2-time1));
 			updateAllSeances();
+			long time3 = System.currentTimeMillis();
+			System.out.println("Temps update all seances : " + String.valueOf(time3-time2));
 			updateTempsTrajet(departureAdress, modeTrajetPossible);
+			long time4 = System.currentTimeMillis();
+			System.out.println("Temps update temps trajet : " + String.valueOf(time4-time3));
 		}	
 		for(Cinema cinema : cinemaList) {
 			List<Film> filmCinemaList = cinema.getFilmList();
