@@ -1,5 +1,7 @@
 # Java 6 Cinema
 
+Repository link : https://github.com/paulden/java6cinema.git  or  with SSH git@github.com:paulden/java6cinema.git
+
 This repository hosts a student Java project, by the group n°6 in the advanced programming class. 
 
 ## Application 
