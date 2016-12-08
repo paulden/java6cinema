@@ -127,16 +127,9 @@ public class TheaterFinder {
 		
 		if(update) {
 			this.bestScreeningList = new ArrayList<>();
-			long time1 = System.currentTimeMillis();
 			updateClosestTheaters(departureAdress, radius);
-			long time2 = System.currentTimeMillis();
-			System.out.println("Temps update closest cinema : " + String.valueOf(time2-time1));
 			updateAllSeances();
-			long time3 = System.currentTimeMillis();
-			System.out.println("Temps update all seances : " + String.valueOf(time3-time2));
 			updateTempsTrajet(departureAdress, transportationModePossibilities);
-			long time4 = System.currentTimeMillis();
-			System.out.println("Temps update temps trajet : " + String.valueOf(time4-time3));
 		}	
 		for(Theater theater : theaterList) {
 			List<Movie> movieList = theater.getMovieList();
