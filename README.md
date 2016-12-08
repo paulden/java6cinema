@@ -31,6 +31,8 @@ cd java6cinema/
 and run :
 ```     
 mvn package
+
+WARNING : This command only works on linux.
 ```
 
 This creates an executable .jar file with all dependencies.

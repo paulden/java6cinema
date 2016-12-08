@@ -8,8 +8,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import com.movie.cinema.Cinema;
-import com.movie.cinema.Film;
+import com.movie.cinema.Theater;
+import com.movie.cinema.Movie;
 
 public class HtmlGenerator {
 	
@@ -19,46 +19,46 @@ public class HtmlGenerator {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static List<Film> generateRandomFilm() {
-		List<Film> filmList = new ArrayList<Film>();
+	public static List<Movie> generateRandomFilm() {
+		List<Movie> filmList = new ArrayList<Movie>();
 		
-		Film film1 = new Film("Les animaux fantastiques", "2h20", "Tous publics");
+		Movie film1 = new Movie("Les animaux fantastiques", "2h20", "Tous publics");
 		filmList.add(film1);
 		
-		Film film2 = new Film("Le petit locataire", "1h39", "Tous publics");
+		Movie film2 = new Movie("Le petit locataire", "1h39", "Tous publics");
 		filmList.add(film2);
 		
-		Film film3 = new Film("Inferno", "2h01", "Tous publics");
+		Movie film3 = new Movie("Inferno", "2h01", "Tous publics");
 		filmList.add(film3);
 		
-		Film film4 = new Film("Tu ne tueras point", "2h11", "Interdit au moins de 12 ans");
+		Movie film4 = new Movie("Tu ne tueras point", "2h11", "Interdit au moins de 12 ans");
 		filmList.add(film4);
 		
-		Film film5 = new Film("Snowden", "2h14", "Tous publics");
+		Movie film5 = new Movie("Snowden", "2h14", "Tous publics");
 		filmList.add(film5);
 		
-		Film film6 = new Film("Mal de pierres", "1h56", "Tous publics");
+		Movie film6 = new Movie("Mal de pierres", "1h56", "Tous publics");
 		filmList.add(film6);
 		
-		Film film7 = new Film("Les Trolls", "1h32", "Tous publics");
+		Movie film7 = new Movie("Les Trolls", "1h32", "Tous publics");
 		filmList.add(film7);
 		
-		Film film8 = new Film("Doctor Strange", "1h55", "Tous publics");
+		Movie film8 = new Movie("Doctor Strange", "1h55", "Tous publics");
 		filmList.add(film8);
 		
 		return filmList;
 		
 	}
 	
-	public static Document generateRandomHtmlCinema(Cinema cinema) {
+	public static Document generateRandomHtmlTheater(Theater theater) {
 		
 		Random random = new Random();
 		
 		String adresse;
 		String name;
-		if (cinema!=null) {
-			name = cinema.getName();
-			adresse = cinema.getAddress();
+		if (theater!=null) {
+			name = theater.getName();
+			adresse = theater.getAddress();
 		} else {
 			adresse = "N/C";
 			name = "N/C";
@@ -76,17 +76,17 @@ public class HtmlGenerator {
 		descElement.append("<div class=\"name\">" + name + "</div>");
 		descElement.append("<div class=\"info\">" + adresse + "</div>");
 		
-		List<Film> filmList = HtmlGenerator.generateRandomFilm();
+		List<Movie> filmList = HtmlGenerator.generateRandomFilm();
 		
 		int filmNumber = random.nextInt(filmList.size());
 		
 		for(int i=0;i<filmNumber;i++) {
 			int filmIndex = random.nextInt(filmList.size());
-			Film film = filmList.get(filmIndex);
+			Movie film = filmList.get(filmIndex);
 			filmList.remove(filmIndex);
 			
 			String nameFilm = film.getName();
-			String duration = film.getDuree();
+			String duration = film.getDuration();
 			String rated = film.getRated();
 			
 			theatherElement.append("<div class=\"movie\"></div>");

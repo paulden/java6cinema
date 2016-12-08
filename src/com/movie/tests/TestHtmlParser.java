@@ -1,5 +1,5 @@
 package com.movie.tests;
-import com.movie.cinema.Cinema;
+import com.movie.cinema.Theater;
 import com.movie.htmlparser.GoogleMoviesHtmlParser;
 
 /**
@@ -11,10 +11,10 @@ public class TestHtmlParser {
 	
 	public static void main(String[] args) {
 		try {
-			for(Cinema cinema : GoogleMoviesHtmlParser.getAllCinemaWithSeancesNearAPlace("antony")) {
+			for(Theater cinema : GoogleMoviesHtmlParser.getAllTheaterWithScreeningNearAPlace("antony")) {
 				System.out.println(cinema);
 			}
-			System.out.println(GoogleMoviesHtmlParser.getCinemaWithSeances("grand rex"));
+			System.out.println(GoogleMoviesHtmlParser.getTheatersWithScreening("grand rex"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
