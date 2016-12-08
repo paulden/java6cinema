@@ -33,7 +33,7 @@ public class Path {
 	/**
 	 * The 4 possible transportation modes. "Transit" is for public transportation.
 	 */
-	public enum ModeTrajet {
+	public enum TransportationMode {
 		WALKING("walking"),
 		DRIVING("driving"),
 		BICYCLING("bicycling"),
@@ -41,7 +41,7 @@ public class Path {
 	
 		private String mode;
 		
-		ModeTrajet(String mode) {
+		TransportationMode(String mode) {
 			this.mode = mode;
 		}
 		

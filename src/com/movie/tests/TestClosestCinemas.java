@@ -3,8 +3,8 @@ package com.movie.tests;
 import java.io.IOException;
 import java.util.List;
 
-import com.movie.cinema.Cinema;
-import com.movie.locations.ClosestCinemas;
+import com.movie.cinema.Theater;
+import com.movie.locations.ClosestTheaters;
 import org.json.JSONException;
 
 /**
@@ -17,7 +17,7 @@ public class TestClosestCinemas {
 	public static double lng = 2.2885256;
 	public static double radius = 5000;
 
-	private static ClosestCinemas closestCinemas = new ClosestCinemas();
+	private static ClosestTheaters closestCinemas = new ClosestTheaters();
 
 	/**
 	 * Tests the setClosestCinemas method for a 10km-radius
@@ -25,11 +25,11 @@ public class TestClosestCinemas {
 	public static void main(String[] args) {
 
 		try {
-			closestCinemas.setClosestCinemas("avenue sully prudhomme", 2000);
-			List<Cinema> cinemaList = closestCinemas.getClosestCinemas();
+			closestCinemas.setClosestTheaters("avenue sully prudhomme", 2000);
+			List<Theater> cinemaList = closestCinemas.getClosestTheaters();
 			System.out.println(closestCinemas.getMyAddress());
 
-			for (Cinema cinema : cinemaList) {
+			for (Theater cinema : cinemaList) {
 				System.out.println(cinema.toString());
 			}
 		} catch (IOException | JSONException e) {

@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.movie.cinema.CinemaFinder;
-import com.movie.cinema.Film;
-import com.movie.cinema.Seance;
+import com.movie.cinema.TheaterFinder;
+import com.movie.cinema.Movie;
+import com.movie.cinema.Screening;
 import com.movie.locations.Path;
-import com.movie.locations.Path.ModeTrajet;
+import com.movie.locations.Path.TransportationMode;
 
 import org.json.JSONException;
 
@@ -28,18 +28,18 @@ public class TestCinemaFinder {
 
 	public static void main(String[] args) {
 
-		CinemaFinder cinemaFinder = new CinemaFinder();
+		TheaterFinder cinemaFinder = new TheaterFinder();
 		try {
-			Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
-			modeTrajetPossible.add(ModeTrajet.WALKING);
-			modeTrajetPossible.add(ModeTrajet.TRANSIT);
+			Set<Path.TransportationMode> modeTrajetPossible = new HashSet<>();
+			modeTrajetPossible.add(TransportationMode.WALKING);
+			modeTrajetPossible.add(TransportationMode.TRANSIT);
 			
 			Calendar departureTime = Calendar.getInstance();
 			departureTime.set(Calendar.HOUR_OF_DAY, 18);
 			departureTime.set(Calendar.MINUTE, 0);
-			List<Seance> bestSeanceList = cinemaFinder.findBestSeances(90, 10000, "20 place de Beaume, Elancourt", departureTime,
+			List<Screening> bestSeanceList = cinemaFinder.findBestSeances(90, 10000, "20 place de Beaume, Elancourt", departureTime,
 					modeTrajetPossible, true);
-			for(Seance seance : bestSeanceList) {
+			for(Screening seance : bestSeanceList) {
 				System.out.println(seance);
 			}
 

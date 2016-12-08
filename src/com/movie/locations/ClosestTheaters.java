@@ -13,34 +13,33 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.movie.cinema.Cinema;
+import com.movie.cinema.Theater;
 
 /**
- * This class gathers the cinemas that are closest to the user in a {@link Cinema} list.<br>
- * They can be used in search of close cinemas or paths.
+ * This class gathers the theathers that are closest to the user in a {@link Theater} list.<br>
+ * They can be used in search of close theaters or paths.
  */
 
-public class ClosestCinemas {
+public class ClosestTheaters {
 	
 	/**
 	 *  Initialize a MyAddress object that will be used to represent the user's position <br>
-	 *  and get a list of cinemas close to him.
+	 *  and get a list of theaters close to him.
 	 */
 	private static MyAddress myAddress = new MyAddress();
 
-	private List<Cinema> closestCinemas;
+	private List<Theater> closestTheaters;
 	
 	// Default constructor
-	public ClosestCinemas(){}
+	public ClosestTheaters(){}
 
 	/**
-	 * Build the closest cinemas list by calling Google Places API
+	 * Build the closest theaters list by calling Google Places API
 	 * @param radius The maximum distance the user is willing to go to
 	 * @throws IOException If there is a failure while connecting to the API
 	 * @throws JSONException If there is something unexpected in the received JSON
 	 */
-	//Cette méthode permet de construire la liste des cinémas proches en appelant l'API Google Places
-	public void setClosestCinemas(String departureAdress, double radius) throws IOException, JSONException{
+	public void setClosestTheaters(String departureAdress, double radius) throws IOException, JSONException{
 		
 		MyAddress myAddress;
 		if(departureAdress==null) {
@@ -72,10 +71,10 @@ public class ClosestCinemas {
 		JSONObject obj = new JSONObject(responseString);		
 		JSONArray results = obj.getJSONArray("results");
 		
-		// The Cinema List to receive the retrieved cinemas
-		List<Cinema> list = new ArrayList<>();
+		// The theater List to receive the retrieved theaters
+		List<Theater> list = new ArrayList<>();
 		
-		// Retrieval of all the cinemas found into the JSON response
+		// Retrieval of all the theaters found into the JSON response
 		for (int i=0;i<results.length();++i) {
 							
 			JSONObject obj2 = results.getJSONObject(i);
@@ -86,15 +85,15 @@ public class ClosestCinemas {
 			double latitude = location.getDouble("lat");
 			double longitude = location.getDouble("lng");
 			
-			// We create the Cinema objects
-			Cinema newCinema = new Cinema(name, address, latitude, longitude);
+			// We create the theater objects
+			Theater newTheater = new Theater(name, address, latitude, longitude);
 			
-			list.add(newCinema);
+			list.add(newTheater);
 			
 			}
 		
 		// Finally setting the list
-		this.closestCinemas = list;
+		this.closestTheaters = list;
 		
 		
 	}
@@ -105,8 +104,8 @@ public class ClosestCinemas {
 		return myAddress;
 	}
 
-	public List<Cinema> getClosestCinemas(){
-		return closestCinemas;
+	public List<Theater> getClosestTheaters(){
+		return closestTheaters;
 	}
 			
 			

@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.movie.cinema.CinemaFinder;
-import com.movie.cinema.Film;
-import com.movie.cinema.Seance;
+import com.movie.cinema.TheaterFinder;
+import com.movie.cinema.Movie;
+import com.movie.cinema.Screening;
 import com.movie.locations.Path;
-import com.movie.locations.Path.ModeTrajet;
+import com.movie.locations.Path.TransportationMode;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -230,36 +230,36 @@ class ButtonListener implements ActionListener{
 
     }
 
-    Set<Path.ModeTrajet> modeTrajetPossible = new HashSet<>();
+    Set<Path.TransportationMode> modeTrajetPossible = new HashSet<>();
     if (walking.getState()) {
-    	modeTrajetPossible.add(ModeTrajet.WALKING);
+    	modeTrajetPossible.add(TransportationMode.WALKING);
     	};
 	if (driving.getState()) {
-		modeTrajetPossible.add(ModeTrajet.DRIVING);
+		modeTrajetPossible.add(TransportationMode.DRIVING);
     	};
     if (transit.getState()) {
-    	modeTrajetPossible.add(ModeTrajet.TRANSIT);
+    	modeTrajetPossible.add(TransportationMode.TRANSIT);
     	};
 	if (bicycling.getState()) {
-		modeTrajetPossible.add(ModeTrajet.BICYCLING);
+		modeTrajetPossible.add(TransportationMode.BICYCLING);
     	};
     	
     //Managing case where user has not selected any means of transportation
     if (!walking.getState() && !driving.getState() && !transit.getState() && !bicycling.getState()) {
     	System.out.println("Aucun mode de transport choisi, modes de transport tous sélectionnés par défaut");
-    	modeTrajetPossible.add(ModeTrajet.WALKING);
+    	modeTrajetPossible.add(TransportationMode.WALKING);
     	walking.setState(true);
-    	modeTrajetPossible.add(ModeTrajet.DRIVING);
+    	modeTrajetPossible.add(TransportationMode.DRIVING);
     	driving.setState(true);
-    	modeTrajetPossible.add(ModeTrajet.TRANSIT);
+    	modeTrajetPossible.add(TransportationMode.TRANSIT);
     	transit.setState(true);
-    	modeTrajetPossible.add(ModeTrajet.BICYCLING);
+    	modeTrajetPossible.add(TransportationMode.BICYCLING);
     	bicycling.setState(true);
     }
     
 
     //Using CinemaFinder class to collect data and display them
-	CinemaFinder cinemaFinder = new CinemaFinder();
+	TheaterFinder cinemaFinder = new TheaterFinder();
 
 	try {			
 		cinemaFinder.updateTempsTrajet(null, modeTrajetPossible);
@@ -271,12 +271,12 @@ class ButtonListener implements ActionListener{
 		String resultsTime = "<html> <h1 style ='color:blue; font-size:16;'> Horaires des séances : </h1> <br> <br>";
 
 		
-		List<Seance> bestSeanceList = cinemaFinder.findBestSeances(time, radius,null,null,modeTrajetPossible,true);
-		for(Seance seance : bestSeanceList) {
+		List<Screening> bestSeanceList = cinemaFinder.findBestSeances(time, radius,null,null,modeTrajetPossible,true);
+		for(Screening seance : bestSeanceList) {
 			System.out.println(seance);
-			resultsCinemas = resultsCinemas + seance.getCinema().getName() + "<br>";
-			resultsAddress = resultsAddress + seance.getCinema().getAddress() + "<br>";
-			resultsMovies = resultsMovies + seance.getFilm().getName() + " - " + seance.getLanguage() + "<br>";
+			resultsCinemas = resultsCinemas + seance.getTheater().getName() + "<br>";
+			resultsAddress = resultsAddress + seance.getTheater().getAddress() + "<br>";
+			resultsMovies = resultsMovies + seance.getMovie().getName() + " - " + seance.getLanguage() + "<br>";
 			
 			//Formatting hour and displaying means of transportation in Time column
 			String hour = String.valueOf(seance.getDate().get(Calendar.HOUR_OF_DAY));
@@ -289,21 +289,21 @@ class ButtonListener implements ActionListener{
 			resultsTime = resultsTime + hour + "h" + minute + " (";
             boolean transportAdded = false;
 
-			if (seance.getModeTrajetList().contains(ModeTrajet.WALKING)){
+			if (seance.getTransportationModeList().contains(TransportationMode.WALKING)){
 				resultsTime = resultsTime + "à pied";
                 transportAdded = true;
 			}
-			if (seance.getModeTrajetList().contains(ModeTrajet.BICYCLING)){
+			if (seance.getTransportationModeList().contains(TransportationMode.BICYCLING)){
                 if (transportAdded) resultsTime += ", ou ";
 				resultsTime = resultsTime + "à vélo";
                 transportAdded = true;
 			}
-			if (seance.getModeTrajetList().contains(ModeTrajet.DRIVING)){
+			if (seance.getTransportationModeList().contains(TransportationMode.DRIVING)){
                 if (transportAdded) resultsTime += ", ou ";
 				resultsTime = resultsTime + "en voiture";
                 transportAdded = true;
 			}
-			if (seance.getModeTrajetList().contains(ModeTrajet.TRANSIT)){
+			if (seance.getTransportationModeList().contains(TransportationMode.TRANSIT)){
                 if (transportAdded) resultsTime += ", ou ";
 				resultsTime = resultsTime + "en transports";
 			}
