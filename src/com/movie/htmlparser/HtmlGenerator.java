@@ -112,7 +112,7 @@ public class HtmlGenerator {
 				int seanceNumber = random.nextInt(HtmlGenerator.numberMaxSeances) + 1;
 				
 				for(int j=0;j<seanceNumber;j++) {
-					int hours = random.nextInt(12)+8;
+					int hours = random.nextInt(15)+8;
 					int minutes = random.nextInt(60);
 					timeElement.append("<div>" + String.valueOf(hours)+ ":" + String.valueOf(minutes)+ "</div>");
 				}
